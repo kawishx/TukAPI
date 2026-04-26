@@ -1,0 +1,527 @@
+openapi: 3.0.3
+info:
+  title: TukAPI
+  version: 1.0.0
+  description: >
+    REST API scaffold for Sri Lanka Police to manage tuk-tuk registration,
+    device tracking, last-known live locations, and movement history queries.
+servers:
+  - url: /api/v1
+tags:
+  - name: Health
+  - name: Auth
+  - name: Provinces
+  - name: Districts
+  - name: Stations
+  - name: TukTuks
+  - name: Drivers
+  - name: Devices
+  - name: Locations
+  - name: Users
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Service health check
+      responses:
+        '200':
+          description: Service is healthy
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login endpoint scaffold
+      description: Returns `501` until password verification is implemented.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+        '501':
+          description: Login flow not implemented yet
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get authenticated user context
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Authenticated user details
+  /provinces:
+    get:
+      tags: [Provinces]
+      summary: List provinces
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/IfNoneMatch'
+      responses:
+        '200':
+          description: Provinces list
+        '304':
+          description: Not modified
+    post:
+      tags: [Provinces]
+      summary: Create province scaffold record
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProvinceInput'
+      responses:
+        '201':
+          description: Province scaffold record created
+  /districts:
+    get:
+      tags: [Districts]
+      summary: List districts
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/ProvinceId'
+      responses:
+        '200':
+          description: Districts list
+    post:
+      tags: [Districts]
+      summary: Create district scaffold record
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DistrictInput'
+      responses:
+        '201':
+          description: District scaffold record created
+  /stations:
+    get:
+      tags: [Stations]
+      summary: List police stations
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/ProvinceId'
+        - $ref: '#/components/parameters/DistrictId'
+      responses:
+        '200':
+          description: Police stations list
+    post:
+      tags: [Stations]
+      summary: Create police station scaffold record
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StationInput'
+      responses:
+        '201':
+          description: Police station scaffold record created
+  /tuk-tuks:
+    get:
+      tags: [TukTuks]
+      summary: List tuk-tuks
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/ProvinceId'
+        - $ref: '#/components/parameters/DistrictId'
+        - $ref: '#/components/parameters/StationId'
+      responses:
+        '200':
+          description: Tuk-tuks list
+    post:
+      tags: [TukTuks]
+      summary: Create tuk-tuk scaffold record
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TukTukInput'
+      responses:
+        '201':
+          description: Tuk-tuk scaffold record created
+  /drivers:
+    get:
+      tags: [Drivers]
+      summary: List drivers
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/ProvinceId'
+        - $ref: '#/components/parameters/StationId'
+      responses:
+        '200':
+          description: Drivers list
+    post:
+      tags: [Drivers]
+      summary: Create driver scaffold record
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DriverInput'
+      responses:
+        '201':
+          description: Driver scaffold record created
+  /devices:
+    get:
+      tags: [Devices]
+      summary: List tracking devices
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+      responses:
+        '200':
+          description: Tracking devices list
+    post:
+      tags: [Devices]
+      summary: Create tracking device scaffold record
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceInput'
+      responses:
+        '201':
+          description: Tracking device scaffold record created
+  /locations/ping:
+    post:
+      tags: [Locations]
+      summary: Accept a location ping
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationPingInput'
+      responses:
+        '201':
+          description: Location ping scaffold record created
+  /locations/live/{tukTukId}:
+    get:
+      tags: [Locations]
+      summary: Get last-known live location
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: tukTukId
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/IfNoneMatch'
+      responses:
+        '200':
+          description: Last-known location
+        '304':
+          description: Not modified
+  /locations/history:
+    get:
+      tags: [Locations]
+      summary: Query movement history by time window
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/SortOrder'
+        - $ref: '#/components/parameters/ProvinceId'
+        - $ref: '#/components/parameters/DistrictId'
+        - $ref: '#/components/parameters/StationId'
+        - name: tukTukId
+          in: query
+          schema:
+            type: string
+        - name: deviceId
+          in: query
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Movement history results
+  /users:
+    get:
+      tags: [Users]
+      summary: List authorized law-enforcement users
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+        - $ref: '#/components/parameters/ProvinceId'
+        - $ref: '#/components/parameters/DistrictId'
+        - $ref: '#/components/parameters/StationId'
+      responses:
+        '200':
+          description: Users list
+    post:
+      tags: [Users]
+      summary: Create authorized user scaffold record
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        '201':
+          description: User scaffold record created
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 20
+    SortBy:
+      name: sortBy
+      in: query
+      schema:
+        type: string
+    SortOrder:
+      name: sortOrder
+      in: query
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: desc
+    Search:
+      name: search
+      in: query
+      schema:
+        type: string
+    ProvinceId:
+      name: provinceId
+      in: query
+      schema:
+        type: string
+    DistrictId:
+      name: districtId
+      in: query
+      schema:
+        type: string
+    StationId:
+      name: stationId
+      in: query
+      schema:
+        type: string
+    IfNoneMatch:
+      name: If-None-Match
+      in: header
+      schema:
+        type: string
+  schemas:
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+    ProvinceInput:
+      type: object
+      required: [name, code]
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+    DistrictInput:
+      type: object
+      required: [name, code, provinceId]
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        provinceId:
+          type: string
+    StationInput:
+      type: object
+      required: [name, code, address, provinceId, districtId]
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        address:
+          type: string
+        provinceId:
+          type: string
+        districtId:
+          type: string
+    TukTukInput:
+      type: object
+      required: [registrationNumber, color, model, provinceId, districtId, stationId]
+      properties:
+        registrationNumber:
+          type: string
+        color:
+          type: string
+        model:
+          type: string
+        provinceId:
+          type: string
+        districtId:
+          type: string
+        stationId:
+          type: string
+        driverId:
+          type: string
+        deviceId:
+          type: string
+    DriverInput:
+      type: object
+      required: [fullName, nationalId, licenseNumber, phoneNumber, stationId]
+      properties:
+        fullName:
+          type: string
+        nationalId:
+          type: string
+        licenseNumber:
+          type: string
+        phoneNumber:
+          type: string
+        stationId:
+          type: string
+    DeviceInput:
+      type: object
+      required: [serialNumber, imei]
+      properties:
+        serialNumber:
+          type: string
+        imei:
+          type: string
+        status:
+          type: string
+          enum: [ACTIVE, INACTIVE, MAINTENANCE]
+        tukTukId:
+          type: string
+    LocationPingInput:
+      type: object
+      required: [tukTukId, deviceId, latitude, longitude, recordedAt]
+      properties:
+        tukTukId:
+          type: string
+        deviceId:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        speedKph:
+          type: number
+        heading:
+          type: number
+        recordedAt:
+          type: string
+          format: date-time
+        provinceId:
+          type: string
+        districtId:
+          type: string
+        stationId:
+          type: string
+    UserInput:
+      type: object
+      required: [fullName, email, badgeNumber, role]
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        badgeNumber:
+          type: string
+        role:
+          type: string
+          enum:
+            - SUPER_ADMIN
+            - NATIONAL_COMMAND
+            - PROVINCIAL_COMMANDER
+            - STATION_COMMANDER
+            - FIELD_OFFICER
+            - ANALYST
+
