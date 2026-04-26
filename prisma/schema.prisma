@@ -11,6 +11,7 @@ enum UserRole {
   SUPER_ADMIN
   NATIONAL_COMMAND
   PROVINCIAL_COMMANDER
+  DISTRICT_COMMANDER
   STATION_COMMANDER
   FIELD_OFFICER
   ANALYST
@@ -19,179 +20,270 @@ enum UserRole {
 enum TukTukStatus {
   ACTIVE
   INACTIVE
-  SUSPENDED
+  MAINTENANCE
+  IMPOUNDED
 }
 
 enum DeviceStatus {
   ACTIVE
   INACTIVE
   MAINTENANCE
+  RETIRED
+}
+
+enum ActorType {
+  USER
+  DEVICE
+  SYSTEM
 }
 
 model Province {
-  id           String         @id @default(cuid())
-  name         String
-  code         String         @unique
-  districts    District[]
-  stations     PoliceStation[]
-  tukTuks      TukTuk[]
-  drivers      Driver[]
-  users        User[]
-  locationPings LocationPing[]
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  id               String            @id @default(cuid())
+  name             String
+  code             String            @unique
+  districts        District[]
+  policeStations   PoliceStation[]
+  drivers          Driver[]
+  tukTuks          TukTuk[]
+  users            User[]
+  locationPings    LocationPing[]
+  currentLocations CurrentLocation[]
+  auditLogs        AuditLog[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 
   @@index([name])
 }
 
 model District {
-  id            String          @id @default(cuid())
-  name          String
-  code          String          @unique
-  provinceId    String
-  province      Province        @relation(fields: [provinceId], references: [id])
-  stations      PoliceStation[]
-  tukTuks       TukTuk[]
-  users         User[]
-  locationPings LocationPing[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id               String            @id @default(cuid())
+  provinceId       String
+  name             String
+  code             String            @unique
+  province         Province          @relation(fields: [provinceId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  policeStations   PoliceStation[]
+  drivers          Driver[]
+  tukTuks          TukTuk[]
+  users            User[]
+  locationPings    LocationPing[]
+  currentLocations CurrentLocation[]
+  auditLogs        AuditLog[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 
+  @@unique([provinceId, name])
   @@index([provinceId])
-  @@index([name])
+  @@index([provinceId, name])
 }
 
 model PoliceStation {
-  id            String          @id @default(cuid())
-  name          String
-  code          String          @unique
-  address       String
-  provinceId    String
-  districtId    String
-  province      Province        @relation(fields: [provinceId], references: [id])
-  district      District        @relation(fields: [districtId], references: [id])
-  tukTuks       TukTuk[]
-  drivers       Driver[]
-  users         User[]
-  locationPings LocationPing[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id               String            @id @default(cuid())
+  provinceId       String
+  districtId       String
+  name             String
+  code             String            @unique
+  address          String
+  contactNumber    String?
+  province         Province          @relation(fields: [provinceId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  district         District          @relation(fields: [districtId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  drivers          Driver[]
+  tukTuks          TukTuk[]
+  users            User[]
+  locationPings    LocationPing[]
+  currentLocations CurrentLocation[]
+  auditLogs        AuditLog[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 
-  @@index([provinceId])
+  @@unique([districtId, name])
+  @@index([provinceId, districtId])
   @@index([districtId])
   @@index([name])
 }
 
 model Driver {
-  id            String        @id @default(cuid())
+  id            String         @id @default(cuid())
+  provinceId    String?
+  districtId    String?
+  stationId     String?
   fullName      String
-  nationalId    String        @unique
-  licenseNumber String        @unique
+  nationalId    String         @unique
+  licenseNumber String         @unique
   phoneNumber   String?
   address       String?
-  provinceId    String?
-  stationId     String?
-  province      Province?     @relation(fields: [provinceId], references: [id])
-  station       PoliceStation? @relation(fields: [stationId], references: [id])
+  isActive      Boolean        @default(true)
+  province      Province?      @relation(fields: [provinceId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  district      District?      @relation(fields: [districtId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  station       PoliceStation? @relation(fields: [stationId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   tukTuks       TukTuk[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
-  @@index([provinceId])
+  @@index([provinceId, districtId])
   @@index([stationId])
   @@index([fullName])
+  @@index([isActive])
 }
 
 model TrackingDevice {
-  id            String        @id @default(cuid())
-  serialNumber  String        @unique
-  imei          String        @unique
-  status        DeviceStatus  @default(ACTIVE)
-  installedAt   DateTime?
-  lastSeenAt    DateTime?
-  tukTuk        TukTuk?
-  locationPings LocationPing[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id              String           @id @default(cuid())
+  serialNumber    String           @unique
+  imei            String?
+  simNumber       String?
+  firmwareVersion String?
+  status          DeviceStatus     @default(ACTIVE)
+  installedAt     DateTime?
+  lastSeenAt      DateTime?
+  assignedTukTuk  TukTuk?
+  locationPings   LocationPing[]
+  currentLocation CurrentLocation?
+  actorAuditLogs  AuditLog[]       @relation("AuditLogActorDevice")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
   @@index([status])
+  @@index([lastSeenAt])
 }
 
 model TukTuk {
-  id                 String          @id @default(cuid())
-  registrationNumber String          @unique
-  color              String
-  model              String
-  status             TukTukStatus    @default(ACTIVE)
+  id                 String           @id @default(cuid())
   provinceId         String?
   districtId         String?
   stationId          String?
   driverId           String?
-  deviceId           String?         @unique
-  province           Province?       @relation(fields: [provinceId], references: [id])
-  district           District?       @relation(fields: [districtId], references: [id])
-  station            PoliceStation?  @relation(fields: [stationId], references: [id])
-  driver             Driver?         @relation(fields: [driverId], references: [id])
-  device             TrackingDevice? @relation(fields: [deviceId], references: [id])
+  deviceId           String?          @unique
+  registrationNumber String           @unique
+  plateNumber        String           @unique
+  model              String
+  color              String?
+  status             TukTukStatus     @default(ACTIVE)
+  notes              String?
+  province           Province?        @relation(fields: [provinceId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  district           District?        @relation(fields: [districtId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  station            PoliceStation?   @relation(fields: [stationId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  driver             Driver?          @relation(fields: [driverId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  device             TrackingDevice?  @relation(fields: [deviceId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   locationPings      LocationPing[]
-  createdAt          DateTime        @default(now())
-  updatedAt          DateTime        @updatedAt
+  currentLocation    CurrentLocation?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
 
-  @@index([provinceId])
-  @@index([districtId])
+  @@index([provinceId, districtId])
   @@index([stationId])
   @@index([driverId])
   @@index([status])
+  @@index([provinceId, districtId, stationId, status])
 }
 
 model User {
-  id          String         @id @default(cuid())
-  fullName    String
-  email       String         @unique
-  badgeNumber String         @unique
-  passwordHash String
-  role        UserRole
-  isActive    Boolean        @default(true)
-  provinceId  String?
-  districtId  String?
-  stationId   String?
-  province    Province?      @relation(fields: [provinceId], references: [id])
-  district    District?      @relation(fields: [districtId], references: [id])
-  station     PoliceStation? @relation(fields: [stationId], references: [id])
-  lastLoginAt DateTime?
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  id            String         @id @default(cuid())
+  provinceId    String?
+  districtId    String?
+  stationId     String?
+  fullName      String
+  email         String         @unique
+  badgeNumber   String?
+  passwordHash  String
+  role          UserRole
+  phoneNumber   String?
+  isActive      Boolean        @default(true)
+  lastLoginAt   DateTime?
+  province      Province?      @relation(fields: [provinceId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  district      District?      @relation(fields: [districtId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  station       PoliceStation? @relation(fields: [stationId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  auditLogs     AuditLog[]     @relation("AuditLogActorUser")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
-  @@index([role])
-  @@index([provinceId])
-  @@index([districtId])
+  @@index([role, isActive])
+  @@index([provinceId, districtId])
   @@index([stationId])
 }
 
 model LocationPing {
-  id            String         @id @default(cuid())
-  tukTukId      String
-  deviceId      String?
-  provinceId    String?
-  districtId    String?
-  stationId     String?
-  latitude      Decimal        @db.Decimal(10, 7)
-  longitude     Decimal        @db.Decimal(10, 7)
-  speedKph      Decimal?       @db.Decimal(6, 2)
-  heading       Decimal?       @db.Decimal(6, 2)
-  recordedAt    DateTime
-  receivedAt    DateTime       @default(now())
-  tukTuk        TukTuk         @relation(fields: [tukTukId], references: [id])
-  device        TrackingDevice? @relation(fields: [deviceId], references: [id])
-  province      Province?      @relation(fields: [provinceId], references: [id])
-  district      District?      @relation(fields: [districtId], references: [id])
-  station       PoliceStation? @relation(fields: [stationId], references: [id])
-  createdAt     DateTime       @default(now())
+  id          String         @id @default(cuid())
+  tukTukId    String
+  deviceId    String?
+  provinceId  String
+  districtId  String
+  stationId   String?
+  latitude    Decimal        @db.Decimal(10, 7)
+  longitude   Decimal        @db.Decimal(10, 7)
+  speedKph    Decimal?       @db.Decimal(6, 2)
+  heading     Decimal?       @db.Decimal(6, 2)
+  accuracyM   Decimal?       @db.Decimal(6, 2)
+  recordedAt  DateTime
+  receivedAt  DateTime       @default(now())
+  tukTuk      TukTuk         @relation(fields: [tukTukId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  device      TrackingDevice? @relation(fields: [deviceId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  province    Province       @relation(fields: [provinceId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  district    District       @relation(fields: [districtId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  station     PoliceStation? @relation(fields: [stationId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  createdAt   DateTime       @default(now())
 
-  @@index([tukTukId, recordedAt])
-  @@index([deviceId, recordedAt])
-  @@index([provinceId, recordedAt])
-  @@index([districtId, recordedAt])
-  @@index([stationId, recordedAt])
+  @@index([tukTukId, recordedAt(sort: Desc)])
+  @@index([deviceId, recordedAt(sort: Desc)])
+  @@index([provinceId, districtId, recordedAt(sort: Desc)])
+  @@index([stationId, recordedAt(sort: Desc)])
+  @@index([recordedAt(sort: Desc)])
 }
 
+model CurrentLocation {
+  id          String         @id @default(cuid())
+  tukTukId    String         @unique
+  deviceId    String?        @unique
+  provinceId  String
+  districtId  String
+  stationId   String?
+  latitude    Decimal        @db.Decimal(10, 7)
+  longitude   Decimal        @db.Decimal(10, 7)
+  speedKph    Decimal?       @db.Decimal(6, 2)
+  heading     Decimal?       @db.Decimal(6, 2)
+  accuracyM   Decimal?       @db.Decimal(6, 2)
+  recordedAt  DateTime
+  receivedAt  DateTime       @default(now())
+  tukTuk      TukTuk         @relation(fields: [tukTukId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  device      TrackingDevice? @relation(fields: [deviceId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  province    Province       @relation(fields: [provinceId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  district    District       @relation(fields: [districtId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  station     PoliceStation? @relation(fields: [stationId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([provinceId, districtId])
+  @@index([stationId])
+  @@index([recordedAt(sort: Desc)])
+  @@index([provinceId, districtId, recordedAt(sort: Desc)])
+}
+
+model AuditLog {
+  id           String         @id @default(cuid())
+  actorType    ActorType
+  actorUserId  String?
+  actorDeviceId String?
+  provinceId   String?
+  districtId   String?
+  stationId    String?
+  action       String
+  entityName   String
+  entityId     String?
+  httpMethod   String?
+  requestPath  String?
+  statusCode   Int?
+  ipAddress    String?
+  userAgent    String?
+  metadata     Json?
+  occurredAt   DateTime       @default(now())
+  actorUser    User?          @relation("AuditLogActorUser", fields: [actorUserId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  actorDevice  TrackingDevice? @relation("AuditLogActorDevice", fields: [actorDeviceId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  province     Province?      @relation(fields: [provinceId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  district     District?      @relation(fields: [districtId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  station      PoliceStation? @relation(fields: [stationId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  createdAt    DateTime       @default(now())
+
+  @@index([actorType, occurredAt(sort: Desc)])
+  @@index([actorUserId, occurredAt(sort: Desc)])
+  @@index([actorDeviceId, occurredAt(sort: Desc)])
+  @@index([entityName, entityId, occurredAt(sort: Desc)])
+  @@index([provinceId, districtId, stationId, occurredAt(sort: Desc)])
+}
