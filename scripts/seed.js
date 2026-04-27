@@ -1,8 +1,9 @@
-import prisma from '../src/db/prismaClient.js';
 import { logger } from '../src/config/logger.js';
+import prisma from '../src/config/prisma.js';
 
 async function main() {
-  logger.info('Seed scaffold is ready. Add provinces, stations, admin users, and demo tuk-tuk records here.');
+  logger.info('Seed placeholder started');
+  logger.info('Add provinces, districts, stations, users, devices, drivers, and tuk-tuks here when you are ready.');
 }
 
 main()
@@ -13,4 +14,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-

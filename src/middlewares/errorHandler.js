@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { ZodError } from 'zod';
 
 import { logger } from '../config/logger.js';
@@ -23,6 +24,22 @@ export const errorHandler = (error, _req, res, _next) => {
     });
   }
 
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === 'P2002') {
+      return res.status(409).json({
+        success: false,
+        message: 'A unique constraint would be violated by this request.',
+      });
+    }
+
+    if (error.code === 'P2025') {
+      return res.status(404).json({
+        success: false,
+        message: 'Requested resource was not found.',
+      });
+    }
+  }
+
   logger.error({ err: error }, 'Unhandled application error');
 
   return res.status(500).json({
@@ -30,4 +47,3 @@ export const errorHandler = (error, _req, res, _next) => {
     message: 'Internal server error.',
   });
 };
-

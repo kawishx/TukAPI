@@ -228,4 +228,3 @@ Example:
 - Keep naming consistent across Prisma models, routes, controllers, and documentation.
 - Prefer idempotent reads and safe updates with clear validation and authorization boundaries.
 - Document every endpoint in OpenAPI and keep the implementation aligned with the specification.
-

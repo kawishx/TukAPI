@@ -27,7 +27,7 @@ export const createProvince = async (req, res) => {
 
   return sendSuccess(res, {
     statusCode: 201,
-    message: 'Province scaffold record created successfully.',
+    message: 'Province created successfully.',
     data: result,
   });
 };
@@ -36,8 +36,7 @@ export const updateProvince = async (req, res) => {
   const result = await provincesService.updateProvince(req.params.id, req.body);
 
   return sendSuccess(res, {
-    message: 'Province scaffold record updated successfully.',
+    message: 'Province updated successfully.',
     data: result,
   });
 };
-

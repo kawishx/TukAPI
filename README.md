@@ -37,10 +37,9 @@ Production-style Node.js ES Modules REST API scaffold for Sri Lanka Police tuk-t
 │   ├── config
 │   │   ├── env.js
 │   │   ├── logger.js
+│   │   ├── prisma.js
 │   │   ├── rateLimit.js
 │   │   └── swagger.js
-│   ├── db
-│   │   └── prismaClient.js
 │   ├── docs
 │   │   └── openapi.yaml
 │   ├── middlewares
@@ -69,7 +68,9 @@ Production-style Node.js ES Modules REST API scaffold for Sri Lanka Police tuk-t
 │       ├── apiResponse.js
 │       ├── constants.js
 │       ├── httpCache.js
+│       ├── pagination.js
 │       ├── queryOptions.js
+│       ├── sorting.js
 │       └── validationSchemas.js
 └── vitest.config.js
 ```
@@ -86,10 +87,9 @@ The scaffold follows a modular controller-service-repository pattern for each do
 
 Shared platform concerns are placed in:
 
-- `config/` for environment, logging, rate limiting, and Swagger bootstrapping
+- `config/` for environment, logging, Prisma, rate limiting, and Swagger bootstrapping
 - `middlewares/` for auth, authorization, validation, async wrapping, and centralized errors
 - `utils/` for cache-aware responses, query parsing, constants, and reusable schemas
-- `db/` for the Prisma client
 
 ## API Overview
 
@@ -114,9 +114,10 @@ Main resource groups:
 Operational endpoints included in the scaffold:
 
 - `GET /api/v1/health`
+- `GET /api/v1/health/ready`
 - `POST /api/v1/auth/login`
 - `GET /api/v1/auth/me`
-- CRUD-style placeholder routes for domain modules
+- versioned route modules for all requested domains
 - `POST /api/v1/locations/ping`
 - `GET /api/v1/locations/live/:tukTukId`
 - `GET /api/v1/locations/history`
@@ -126,6 +127,8 @@ Operational endpoints included in the scaffold:
 The scaffold includes:
 
 - JWT authentication and role-based authorization middleware
+- Prisma PostgreSQL integration with env-based `DATABASE_URL`
+- database-aware health checks and a real Prisma-backed provinces repository example
 - pagination, sorting, and geographic filtering query scaffolding
 - ETag and `Last-Modified` based conditional GET support helpers
 - Swagger/OpenAPI documentation setup
@@ -153,26 +156,59 @@ The scaffold includes:
    npm run prisma:generate
    ```
 
-5. Run migrations when your schema is ready:
+5. Create and apply the first migration:
 
    ```bash
-   npm run prisma:migrate:dev
+   npm run prisma:migrate:dev -- --name init
    ```
 
-6. Start the development server:
+6. Optional follow-up Prisma commands:
+
+   ```bash
+   npm run prisma:migrate:status
+   npm run prisma:seed
+   npm run prisma:studio
+   ```
+
+7. Start the development server:
 
    ```bash
    npm run dev
    ```
 
-7. Open Swagger UI:
+8. Open Swagger UI:
 
    ```text
    http://localhost:3000/docs
    ```
 
+## Prisma Workflow
+
+Use these commands during development:
+
+```bash
+npm install
+cp .env.example .env
+npm run prisma:generate
+npm run prisma:migrate:dev -- --name init
+npm run prisma:seed
+npm run dev
+```
+
+For later schema updates:
+
+```bash
+npm run prisma:migrate:dev -- --name describe_your_change
+```
+
+For checking migration state:
+
+```bash
+npm run prisma:migrate:status
+```
+
 ## Notes
 
-- Business logic is intentionally scaffolded with placeholders and TODO-ready boundaries.
-- Prisma models are included as a starting point for relational design and can be refined based on your final project requirements.
+- Most modules remain intentionally scaffolded with TODO-ready placeholders.
+- `health` and `provinces` now demonstrate real database integration patterns using Prisma.
 - The auth flow is wired structurally, but credential verification and secure password storage should be implemented next.

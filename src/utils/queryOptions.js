@@ -1,15 +1,13 @@
-export const buildListOptions = (query) => {
-  const page = query.page ?? 1;
-  const limit = query.limit ?? 20;
+import { buildPaginationMeta, parsePagination } from './pagination.js';
+import { parseSorting } from './sorting.js';
+
+export const buildListOptions = (query, defaults = {}) => {
+  const pagination = parsePagination(query, defaults.pagination);
+  const sorting = parseSorting(query, defaults.sorting);
 
   return {
-    page,
-    limit,
-    skip: (page - 1) * limit,
-    take: limit,
-    orderBy: {
-      [query.sortBy ?? 'createdAt']: query.sortOrder ?? 'desc',
-    },
+    ...pagination,
+    ...sorting,
     filters: Object.fromEntries(
       Object.entries({
         search: query.search,
@@ -27,11 +25,4 @@ export const buildListOptions = (query) => {
     ),
   };
 };
-
-export const buildPaginationMeta = ({ page, limit, totalItems }) => ({
-  page,
-  limit,
-  totalItems,
-  totalPages: totalItems === 0 ? 0 : Math.ceil(totalItems / limit),
-});
-
+export { buildPaginationMeta };
