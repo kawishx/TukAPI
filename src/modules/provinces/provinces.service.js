@@ -1,15 +1,21 @@
 import * as provincesRepository from './provinces.repository.js';
+import { assertScopeAccess, buildScopeWhere } from '../../utils/accessScope.js';
 import { ApiError } from '../../utils/apiError.js';
 import { buildListOptions, buildPaginationMeta } from '../../utils/queryOptions.js';
 
-export const listProvinces = async (query) => {
+export const listProvinces = async (query, user) => {
   const options = buildListOptions(query, {
     sorting: {
       sortBy: 'name',
       sortOrder: 'asc',
     },
   });
-  const result = await provincesRepository.findMany(options);
+  const result = await provincesRepository.findMany(
+    options,
+    buildScopeWhere(user, {
+      provinceField: 'id',
+    }),
+  );
 
   return {
     items: result.items,
@@ -22,12 +28,16 @@ export const listProvinces = async (query) => {
   };
 };
 
-export const getProvinceById = async (id) => {
+export const getProvinceById = async (id, user) => {
   const result = await provincesRepository.findById(id);
 
   if (!result.data) {
     throw new ApiError(404, 'Province not found.');
   }
+
+  assertScopeAccess(user, result.data, {
+    provinceField: 'id',
+  });
 
   return result;
 };

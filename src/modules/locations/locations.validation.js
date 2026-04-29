@@ -12,8 +12,8 @@ export const locationPingSchema = z.object({
   speedKph: z.coerce.number().min(0).max(200).optional(),
   heading: z.coerce.number().min(0).max(360).optional(),
   recordedAt: z.string().datetime(),
-  provinceId: z.string().trim().optional(),
-  districtId: z.string().trim().optional(),
+  provinceId: z.string().trim().min(1),
+  districtId: z.string().trim().min(1),
   stationId: z.string().trim().optional(),
 });
 
@@ -24,4 +24,3 @@ export const locationHistoryQuerySchema = scopedListQuerySchema.extend({
   startTime: z.string().datetime().optional(),
   endTime: z.string().datetime().optional(),
 });
-

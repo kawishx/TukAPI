@@ -116,9 +116,11 @@ Operational endpoints included in the scaffold:
 - `GET /api/v1/health`
 - `GET /api/v1/health/ready`
 - `POST /api/v1/auth/login`
+- `POST /api/v1/auth/refresh`
+- `POST /api/v1/auth/logout`
 - `GET /api/v1/auth/me`
 - versioned route modules for all requested domains
-- `POST /api/v1/locations/ping`
+- `POST /api/v1/locations/pings`
 - `GET /api/v1/locations/live/:tukTukId`
 - `GET /api/v1/locations/history`
 - `GET /docs`

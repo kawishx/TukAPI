@@ -1,25 +1,37 @@
 import prisma from '../../config/prisma.js';
 
-const buildProvinceWhere = (filters) => {
-  if (!filters.search) {
+const buildProvinceWhere = (filters, scopeWhere = {}) => {
+  const conditions = [];
+
+  if (filters.search) {
+    conditions.push({
+      OR: [
+        {
+          name: {
+            contains: filters.search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          code: {
+            contains: filters.search,
+            mode: 'insensitive',
+          },
+        },
+      ],
+    });
+  }
+
+  if (Object.keys(scopeWhere).length > 0) {
+    conditions.push(scopeWhere);
+  }
+
+  if (conditions.length === 0) {
     return {};
   }
 
   return {
-    OR: [
-      {
-        name: {
-          contains: filters.search,
-          mode: 'insensitive',
-        },
-      },
-      {
-        code: {
-          contains: filters.search,
-          mode: 'insensitive',
-        },
-      },
-    ],
+    AND: conditions,
   };
 };
 
@@ -34,8 +46,8 @@ const resolveLastModified = (items) => {
   }, items[0].updatedAt ?? items[0].createdAt);
 };
 
-export const findMany = async (options) => {
-  const where = buildProvinceWhere(options.filters);
+export const findMany = async (options, scopeWhere) => {
+  const where = buildProvinceWhere(options.filters, scopeWhere);
 
   const [items, totalItems] = await Promise.all([
     prisma.province.findMany({

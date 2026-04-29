@@ -2,7 +2,7 @@ import * as provincesService from './provinces.service.js';
 import { sendCachedSuccess, sendSuccess } from '../../utils/apiResponse.js';
 
 export const listProvinces = async (req, res) => {
-  const result = await provincesService.listProvinces(req.query);
+  const result = await provincesService.listProvinces(req.query, req.user);
 
   return sendCachedSuccess(req, res, {
     message: 'Provinces fetched successfully.',
@@ -13,7 +13,7 @@ export const listProvinces = async (req, res) => {
 };
 
 export const getProvinceById = async (req, res) => {
-  const result = await provincesService.getProvinceById(req.params.id);
+  const result = await provincesService.getProvinceById(req.params.id, req.user);
 
   return sendCachedSuccess(req, res, {
     message: 'Province fetched successfully.',

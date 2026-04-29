@@ -8,13 +8,11 @@ datasource db {
 }
 
 enum UserRole {
-  SUPER_ADMIN
-  NATIONAL_COMMAND
-  PROVINCIAL_COMMANDER
-  DISTRICT_COMMANDER
-  STATION_COMMANDER
-  FIELD_OFFICER
-  ANALYST
+  HQ_ADMIN
+  PROVINCIAL_ADMIN
+  DISTRICT_OFFICER
+  STATION_OFFICER
+  DEVICE_CLIENT
 }
 
 enum TukTukStatus {
@@ -131,9 +129,11 @@ model TrackingDevice {
   imei            String?
   simNumber       String?
   firmwareVersion String?
+  authTokenHash   String?
   status          DeviceStatus     @default(ACTIVE)
   installedAt     DateTime?
   lastSeenAt      DateTime?
+  lastAuthenticatedAt DateTime?
   assignedTukTuk  TukTuk?
   locationPings   LocationPing[]
   currentLocation CurrentLocation?
@@ -184,6 +184,7 @@ model User {
   email         String         @unique
   badgeNumber   String?
   passwordHash  String
+  refreshTokenHash String?
   role          UserRole
   phoneNumber   String?
   isActive      Boolean        @default(true)

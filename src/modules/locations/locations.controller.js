@@ -2,17 +2,22 @@ import * as locationsService from './locations.service.js';
 import { sendCachedSuccess, sendSuccess } from '../../utils/apiResponse.js';
 
 export const createLocationPing = async (req, res) => {
-  const result = await locationsService.createLocationPing(req.body);
+  const result = await locationsService.createLocationPing(req.body, req.device, {
+    ip: req.ip,
+    path: req.originalUrl,
+    method: req.method,
+    userAgent: req.get('user-agent'),
+  });
 
   return sendSuccess(res, {
     statusCode: 201,
-    message: 'Location ping scaffold record created successfully.',
+    message: 'Location ping accepted successfully.',
     data: result,
   });
 };
 
 export const getLiveLocation = async (req, res) => {
-  const result = await locationsService.getLiveLocation(req.params.tukTukId);
+  const result = await locationsService.getLiveLocation(req.params.tukTukId, req.user);
 
   return sendCachedSuccess(req, res, {
     message: 'Last known live location fetched successfully.',
@@ -22,7 +27,7 @@ export const getLiveLocation = async (req, res) => {
 };
 
 export const getLocationHistory = async (req, res) => {
-  const result = await locationsService.getLocationHistory(req.query);
+  const result = await locationsService.getLocationHistory(req.query, req.user);
 
   return sendCachedSuccess(req, res, {
     message: 'Movement history fetched successfully.',
@@ -31,4 +36,3 @@ export const getLocationHistory = async (req, res) => {
     lastModified: result.lastModified,
   });
 };
-

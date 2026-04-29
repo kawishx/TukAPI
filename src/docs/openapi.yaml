@@ -58,12 +58,13 @@ paths:
                 data:
                   accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo
                   tokenType: Bearer
-                  expiresIn: 86400
+                  accessTokenExpiresIn: 15m
+                  refreshTokenExpiresIn: 7d
                   user:
                     id: usr_01HQ4B1Y8M0D0A9X2N8E3R1P7M
                     fullName: Inspector Silva
                     email: inspector.silva@police.gov.lk
-                    role: STATION_COMMANDER
+                    role: STATION_OFFICER
                     provinceId: prv_western
                     districtId: dst_colombo
                     stationId: stn_fort
@@ -73,6 +74,64 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Rotate access and refresh tokens
+      operationId: refreshAuthTokens
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+            example:
+              refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh-demo
+      responses:
+        '200':
+          description: Tokens refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Invalidate the current refresh token
+      operationId: logout
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+            example:
+              refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh-demo
+      responses:
+        '200':
+          description: Logout completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericSuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '429':
           $ref: '#/components/responses/TooManyRequests'
         '500':
@@ -1045,13 +1104,11 @@ components:
     UserRole:
       type: string
       enum:
-        - SUPER_ADMIN
-        - NATIONAL_COMMAND
-        - PROVINCIAL_COMMANDER
-        - DISTRICT_COMMANDER
-        - STATION_COMMANDER
-        - FIELD_OFFICER
-        - ANALYST
+        - HQ_ADMIN
+        - PROVINCIAL_ADMIN
+        - DISTRICT_OFFICER
+        - STATION_OFFICER
+        - DEVICE_CLIENT
     TukTukStatus:
       type: string
       enum:
@@ -1390,6 +1447,18 @@ components:
         password:
           type: string
           minLength: 8
+    RefreshRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken:
+          type: string
+    LogoutRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken:
+          type: string
     AuthenticatedUser:
       type: object
       properties:
@@ -1423,13 +1492,26 @@ components:
           properties:
             accessToken:
               type: string
+            refreshToken:
+              type: string
             tokenType:
               type: string
               example: Bearer
-            expiresIn:
-              type: integer
+            accessTokenExpiresIn:
+              type: string
+            refreshTokenExpiresIn:
+              type: string
             user:
               $ref: '#/components/schemas/AuthenticatedUser'
+    GenericSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          nullable: true
     CreateTukTukRequest:
       type: object
       required:
