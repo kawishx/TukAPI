@@ -1,33 +1,91 @@
-export const findMany = async (_options) => ({
-  items: [],
-  totalItems: 0,
-  lastModified: new Date().toISOString(),
-});
+import prisma from '../../config/prisma.js';
+import { buildSearchWhere, combineWhere, resolveLastModified } from '../../utils/repositoryHelpers.js';
 
-export const findById = async (id) => ({
-  data: {
-    id,
-    name: 'Fort Police Station',
-    code: 'FORT',
-    provinceId: 'province_scaffold_id',
-    districtId: 'district_scaffold_id',
-    address: 'Colombo 01',
-    isPlaceholder: true,
+const stationInclude = {
+  province: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+    },
   },
-  lastModified: new Date().toISOString(),
-});
+  district: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+    },
+  },
+};
 
-export const create = async (payload) => ({
-  id: 'station_scaffold_id',
-  ...payload,
-  createdAt: new Date().toISOString(),
-  isPlaceholder: true,
-});
+export const findMany = async (options, scopeWhere) => {
+  const where = combineWhere(
+    scopeWhere,
+    options.filters.provinceId ? { provinceId: options.filters.provinceId } : {},
+    options.filters.districtId ? { districtId: options.filters.districtId } : {},
+    options.filters.isActive !== undefined ? { isActive: options.filters.isActive } : {},
+    buildSearchWhere(options.filters.search, [
+      'name',
+      'code',
+      'address',
+      (search) => ({
+        province: {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      }),
+      (search) => ({
+        district: {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+      }),
+    ]),
+  );
 
-export const update = async (id, payload) => ({
-  id,
-  ...payload,
-  updatedAt: new Date().toISOString(),
-  isPlaceholder: true,
-});
+  const [items, totalItems] = await Promise.all([
+    prisma.policeStation.findMany({
+      where,
+      include: stationInclude,
+      orderBy: options.orderBy,
+      skip: options.skip,
+      take: options.take,
+    }),
+    prisma.policeStation.count({ where }),
+  ]);
 
+  return {
+    items,
+    totalItems,
+    lastModified: resolveLastModified(items)?.toISOString() ?? null,
+  };
+};
+
+export const findById = async (id) => {
+  const station = await prisma.policeStation.findUnique({
+    where: { id },
+    include: stationInclude,
+  });
+
+  return {
+    data: station,
+    lastModified: station ? (station.updatedAt ?? station.createdAt).toISOString() : null,
+  };
+};
+
+export const create = async (payload) =>
+  prisma.policeStation.create({
+    data: payload,
+    include: stationInclude,
+  });
+
+export const update = async (id, payload) =>
+  prisma.policeStation.update({
+    where: { id },
+    data: payload,
+    include: stationInclude,
+  });

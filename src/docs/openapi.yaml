@@ -3,32 +3,32 @@ info:
   title: TukAPI
   version: 1.0.0
   description: >
-    OpenAPI draft for the Sri Lanka Police real-time tuk-tuk tracking and movement
-    logging REST API. The API supports geographic administration, vehicle/device
-    management, secure law-enforcement access, live location views, and historical
-    movement queries.
+    OpenAPI draft for the Sri Lanka Police tuk-tuk tracking and movement logging API.
+    This document covers authentication, protected master-data management, device ping
+    ingestion, and live or historical location lookup endpoints.
 servers:
   - url: http://localhost:3000/api/v1
     description: Local development
 tags:
   - name: Auth
-    description: Authentication and token issuance endpoints.
+    description: User authentication and token management.
   - name: Provinces
-    description: Province reference and lookup endpoints.
+    description: Province reference data.
   - name: Districts
-    description: District reference and lookup endpoints.
+    description: District reference data.
   - name: Stations
-    description: Police station management and filtering endpoints.
+    description: Police station management.
   - name: Drivers
-    description: Driver management endpoints.
+    description: Driver management.
   - name: TukTuks
-    description: Tuk-tuk registration, assignment, and lookup endpoints.
+    description: Tuk-tuk registry and assignment management.
   - name: Devices
-    description: Tracking device registration and assignment endpoints.
+    description: Tracking device registry and assignment management.
   - name: Users
-    description: Authorized law-enforcement user administration endpoints.
+    description: Authorized law-enforcement user administration.
   - name: Locations
-    description: Real-time location ingestion and live/history read endpoints.
+    description: Device ping ingestion and live or historical location access.
+
 paths:
   /auth/login:
     post:
@@ -43,8 +43,8 @@ paths:
             schema:
               $ref: '#/components/schemas/LoginRequest'
             example:
-              email: inspector.silva@police.gov.lk
-              password: SecurePassword123!
+              email: hq.admin@police.gov.lk
+              password: DemoPassword123!
       responses:
         '200':
           description: Login successful
@@ -52,22 +52,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthSuccessResponse'
-              example:
-                success: true
-                message: Login successful.
-                data:
-                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.demo
-                  tokenType: Bearer
-                  accessTokenExpiresIn: 15m
-                  refreshTokenExpiresIn: 7d
-                  user:
-                    id: usr_01HQ4B1Y8M0D0A9X2N8E3R1P7M
-                    fullName: Inspector Silva
-                    email: inspector.silva@police.gov.lk
-                    role: STATION_OFFICER
-                    provinceId: prv_western
-                    districtId: dst_colombo
-                    stationId: stn_fort
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -83,7 +67,7 @@ paths:
     post:
       tags: [Auth]
       summary: Rotate access and refresh tokens
-      operationId: refreshAuthTokens
+      operationId: refreshTokens
       security: []
       requestBody:
         required: true
@@ -91,8 +75,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RefreshRequest'
-            example:
-              refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh-demo
       responses:
         '200':
           description: Tokens refreshed successfully
@@ -104,6 +86,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
         '429':
           $ref: '#/components/responses/TooManyRequests'
         '500':
@@ -121,8 +105,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/LogoutRequest'
-            example:
-              refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.refresh-demo
       responses:
         '200':
           description: Logout completed successfully
@@ -132,6 +114,10 @@ paths:
                 $ref: '#/components/schemas/GenericSuccessResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
         '429':
           $ref: '#/components/responses/TooManyRequests'
         '500':
@@ -147,9 +133,9 @@ paths:
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/SortByProvince'
-        - $ref: '#/components/parameters/SortOrder'
         - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/ProvinceSortBy'
+        - $ref: '#/components/parameters/SortOrderAsc'
         - $ref: '#/components/parameters/IfNoneMatch'
         - $ref: '#/components/parameters/IfModifiedSince'
       responses:
@@ -166,31 +152,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProvinceListResponse'
-              example:
-                success: true
-                message: Provinces fetched successfully.
-                data:
-                  - id: prv_western
-                    name: Western Province
-                    code: WP
-                    createdAt: '2026-04-26T08:00:00.000Z'
-                    updatedAt: '2026-04-26T08:00:00.000Z'
-                  - id: prv_central
-                    name: Central Province
-                    code: CP
-                    createdAt: '2026-04-26T08:00:00.000Z'
-                    updatedAt: '2026-04-26T08:00:00.000Z'
-                meta:
-                  page: 1
-                  limit: 20
-                  totalItems: 9
-                  totalPages: 1
         '304':
           $ref: '#/components/responses/NotModified'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /provinces/{id}:
+    get:
+      tags: [Provinces]
+      summary: Get a single province
+      operationId: getProvinceById
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+        - $ref: '#/components/parameters/IfNoneMatch'
+        - $ref: '#/components/parameters/IfModifiedSince'
+      responses:
+        '200':
+          description: Province returned successfully
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+            Last-Modified:
+              $ref: '#/components/headers/LastModified'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvinceSingleResponse'
+        '304':
+          $ref: '#/components/responses/NotModified'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
         '500':
@@ -206,10 +211,11 @@ paths:
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/SortByDistrict'
-        - $ref: '#/components/parameters/SortOrder'
         - $ref: '#/components/parameters/Search'
         - $ref: '#/components/parameters/ProvinceId'
+        - $ref: '#/components/parameters/ProvinceCode'
+        - $ref: '#/components/parameters/DistrictSortBy'
+        - $ref: '#/components/parameters/SortOrderAsc'
         - $ref: '#/components/parameters/IfNoneMatch'
         - $ref: '#/components/parameters/IfModifiedSince'
       responses:
@@ -237,26 +243,20 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /stations:
+  /districts/{id}:
     get:
-      tags: [Stations]
-      summary: List police stations
-      operationId: listStations
+      tags: [Districts]
+      summary: Get a single district
+      operationId: getDistrictById
       security:
         - BearerAuth: []
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/SortByStation'
-        - $ref: '#/components/parameters/SortOrder'
-        - $ref: '#/components/parameters/Search'
-        - $ref: '#/components/parameters/ProvinceId'
-        - $ref: '#/components/parameters/DistrictId'
+        - $ref: '#/components/parameters/IdPath'
         - $ref: '#/components/parameters/IfNoneMatch'
         - $ref: '#/components/parameters/IfModifiedSince'
       responses:
         '200':
-          description: Police station list returned successfully
+          description: District returned successfully
           headers:
             ETag:
               $ref: '#/components/headers/ETag'
@@ -267,13 +267,160 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StationListResponse'
+                $ref: '#/components/schemas/DistrictSingleResponse'
         '304':
           $ref: '#/components/responses/NotModified'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /stations:
+    get:
+      tags: [Stations]
+      summary: List police stations
+      operationId: listStations
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/ProvinceId'
+        - $ref: '#/components/parameters/DistrictId'
+        - $ref: '#/components/parameters/IsActive'
+        - $ref: '#/components/parameters/StationSortBy'
+        - $ref: '#/components/parameters/SortOrderAsc'
+      responses:
+        '200':
+          description: Police station list returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags: [Stations]
+      summary: Create a police station
+      operationId: createStation
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStationRequest'
+      responses:
+        '201':
+          description: Police station created successfully
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationSingleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /stations/{id}:
+    get:
+      tags: [Stations]
+      summary: Get a single police station
+      operationId: getStationById
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+        - $ref: '#/components/parameters/IfNoneMatch'
+        - $ref: '#/components/parameters/IfModifiedSince'
+      responses:
+        '200':
+          description: Police station returned successfully
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+            Last-Modified:
+              $ref: '#/components/headers/LastModified'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationSingleResponse'
+        '304':
+          $ref: '#/components/responses/NotModified'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags: [Stations]
+      summary: Partially update a police station
+      operationId: updateStation
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStationRequest'
+      responses:
+        '200':
+          description: Police station updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationSingleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
         '429':
           $ref: '#/components/responses/TooManyRequests'
         '500':
@@ -289,34 +436,128 @@ paths:
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/SortByDriver'
-        - $ref: '#/components/parameters/SortOrder'
         - $ref: '#/components/parameters/Search'
         - $ref: '#/components/parameters/ProvinceId'
         - $ref: '#/components/parameters/DistrictId'
         - $ref: '#/components/parameters/StationId'
-        - $ref: '#/components/parameters/IfNoneMatch'
-        - $ref: '#/components/parameters/IfModifiedSince'
+        - $ref: '#/components/parameters/IsActive'
+        - $ref: '#/components/parameters/LicenseNumber'
+        - $ref: '#/components/parameters/NationalId'
+        - $ref: '#/components/parameters/DriverSortBy'
+        - $ref: '#/components/parameters/SortOrderDesc'
       responses:
         '200':
           description: Driver list returned successfully
-          headers:
-            ETag:
-              $ref: '#/components/headers/ETag'
-            Last-Modified:
-              $ref: '#/components/headers/LastModified'
-            Cache-Control:
-              $ref: '#/components/headers/CacheControl'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DriverListResponse'
-        '304':
-          $ref: '#/components/responses/NotModified'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags: [Drivers]
+      summary: Create a driver
+      operationId: createDriver
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDriverRequest'
+      responses:
+        '201':
+          description: Driver created successfully
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverSingleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /drivers/{id}:
+    get:
+      tags: [Drivers]
+      summary: Get a single driver
+      operationId: getDriverById
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Driver returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverSingleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags: [Drivers]
+      summary: Partially update a driver
+      operationId: updateDriver
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDriverRequest'
+      responses:
+        '200':
+          description: Driver updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverSingleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
         '429':
           $ref: '#/components/responses/TooManyRequests'
         '500':
@@ -332,8 +573,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/SortByTukTuk'
-        - $ref: '#/components/parameters/SortOrder'
         - $ref: '#/components/parameters/Search'
         - $ref: '#/components/parameters/ProvinceId'
         - $ref: '#/components/parameters/DistrictId'
@@ -341,24 +580,19 @@ paths:
         - $ref: '#/components/parameters/DriverId'
         - $ref: '#/components/parameters/DeviceId'
         - $ref: '#/components/parameters/TukTukStatus'
-        - $ref: '#/components/parameters/IfNoneMatch'
-        - $ref: '#/components/parameters/IfModifiedSince'
+        - $ref: '#/components/parameters/PlateNumber'
+        - $ref: '#/components/parameters/RegistrationNumber'
+        - $ref: '#/components/parameters/TukTukSortBy'
+        - $ref: '#/components/parameters/SortOrderDesc'
       responses:
         '200':
           description: Tuk-tuk list returned successfully
-          headers:
-            ETag:
-              $ref: '#/components/headers/ETag'
-            Last-Modified:
-              $ref: '#/components/headers/LastModified'
-            Cache-Control:
-              $ref: '#/components/headers/CacheControl'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TukTukListResponse'
-        '304':
-          $ref: '#/components/responses/NotModified'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -369,7 +603,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
     post:
       tags: [TukTuks]
-      summary: Create a tuk-tuk record
+      summary: Create a tuk-tuk
       operationId: createTukTuk
       security:
         - BearerAuth: []
@@ -384,13 +618,13 @@ paths:
               plateNumber: WP CAB-4567
               model: Bajaj RE
               color: Green
+              provinceId: cm9x7a1bc0001abc123456789
+              districtId: cm9x7a1bc0002abc123456789
+              stationId: cm9x7a1bc0003abc123456789
+              driverId: cm9x7a1bc0004abc123456789
+              deviceId: cm9x7a1bc0005abc123456789
               status: ACTIVE
-              provinceId: prv_western
-              districtId: dst_colombo
-              stationId: stn_fort
-              driverId: drv_01HQ4C0B4A84J4W4F6K8T0Z1RM
-              deviceId: dev_01HQ4C9W5WRD08HX8PSBNM8D2G
-              notes: Registered under urban monitoring pilot batch.
+              notes: Demonstration vehicle for Colombo district.
       responses:
         '201':
           description: Tuk-tuk created successfully
@@ -401,24 +635,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TukTukSingleResponse'
-              example:
-                success: true
-                message: Tuk-tuk created successfully.
-                data:
-                  id: ttk_01HQ4D0FQY9ZV7A9X4T6P2N8MR
-                  registrationNumber: REG-2026-000145
-                  plateNumber: WP CAB-4567
-                  model: Bajaj RE
-                  color: Green
-                  status: ACTIVE
-                  provinceId: prv_western
-                  districtId: dst_colombo
-                  stationId: stn_fort
-                  driverId: drv_01HQ4C0B4A84J4W4F6K8T0Z1RM
-                  deviceId: dev_01HQ4C9W5WRD08HX8PSBNM8D2G
-                  notes: Registered under urban monitoring pilot batch.
-                  createdAt: '2026-04-26T08:15:00.000Z'
-                  updatedAt: '2026-04-26T08:15:00.000Z'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -473,7 +689,7 @@ paths:
           $ref: '#/components/responses/InternalServerError'
     patch:
       tags: [TukTuks]
-      summary: Update a tuk-tuk
+      summary: Partially update a tuk-tuk
       operationId: updateTukTuk
       security:
         - BearerAuth: []
@@ -509,25 +725,27 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-  /devices:
+  /tuk-tuks/{id}/location-history:
     get:
-      tags: [Devices]
-      summary: List tracking devices
-      operationId: listDevices
+      tags: [TukTuks, Locations]
+      summary: Query movement history for a single tuk-tuk
+      operationId: getTukTukLocationHistory
       security:
         - BearerAuth: []
       parameters:
+        - $ref: '#/components/parameters/IdPath'
+        - $ref: '#/components/parameters/FromTime'
+        - $ref: '#/components/parameters/ToTime'
+        - $ref: '#/components/parameters/IgnitionOn'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/SortByDevice'
-        - $ref: '#/components/parameters/SortOrder'
-        - $ref: '#/components/parameters/Search'
-        - $ref: '#/components/parameters/DeviceStatus'
+        - $ref: '#/components/parameters/LocationHistorySortBy'
+        - $ref: '#/components/parameters/SortOrderDesc'
         - $ref: '#/components/parameters/IfNoneMatch'
         - $ref: '#/components/parameters/IfModifiedSince'
       responses:
         '200':
-          description: Device list returned successfully
+          description: Tuk-tuk location history returned successfully
           headers:
             ETag:
               $ref: '#/components/headers/ETag'
@@ -538,13 +756,153 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeviceListResponse'
+                $ref: '#/components/schemas/LocationPingListResponse'
         '304':
           $ref: '#/components/responses/NotModified'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /devices:
+    get:
+      tags: [Devices]
+      summary: List tracking devices
+      operationId: listDevices
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/TukTukId'
+        - $ref: '#/components/parameters/DeviceStatus'
+        - $ref: '#/components/parameters/SerialNumber'
+        - $ref: '#/components/parameters/DeviceSortBy'
+        - $ref: '#/components/parameters/SortOrderDesc'
+      responses:
+        '200':
+          description: Device list returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags: [Devices]
+      summary: Create a tracking device
+      operationId: createDevice
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDeviceRequest'
+      responses:
+        '201':
+          description: Device created successfully
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceSingleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /devices/{id}:
+    get:
+      tags: [Devices]
+      summary: Get a single tracking device
+      operationId: getDeviceById
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: Device returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceSingleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags: [Devices]
+      summary: Partially update a tracking device
+      operationId: updateDevice
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDeviceRequest'
+      responses:
+        '200':
+          description: Device updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceSingleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
         '429':
           $ref: '#/components/responses/TooManyRequests'
         '500':
@@ -553,21 +911,21 @@ paths:
   /users:
     get:
       tags: [Users]
-      summary: List authorized law-enforcement users
+      summary: List authorized users
       operationId: listUsers
       security:
         - BearerAuth: []
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/SortByUser'
-        - $ref: '#/components/parameters/SortOrder'
         - $ref: '#/components/parameters/Search'
         - $ref: '#/components/parameters/ProvinceId'
         - $ref: '#/components/parameters/DistrictId'
         - $ref: '#/components/parameters/StationId'
         - $ref: '#/components/parameters/UserRole'
-        - $ref: '#/components/parameters/IncludeInactive'
+        - $ref: '#/components/parameters/IsActive'
+        - $ref: '#/components/parameters/UserSortBy'
+        - $ref: '#/components/parameters/SortOrderDesc'
       responses:
         '200':
           description: User list returned successfully
@@ -575,6 +933,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -583,19 +943,118 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
         '500':
           $ref: '#/components/responses/InternalServerError'
+    post:
+      tags: [Users]
+      summary: Create an authorized law-enforcement user
+      operationId: createUser
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: User created successfully
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSingleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Get a single authorized user
+      operationId: getUserById
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: User returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSingleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags: [Users]
+      summary: Partially update an authorized user
+      operationId: updateUser
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSingleResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /locations/pings:
     post:
       tags: [Locations]
-      summary: Ingest a location ping from a tracking device
+      summary: Submit a location ping
       description: >
-        Designed for device-origin telemetry ingestion. A dedicated device token
-        is preferred over user JWT for this route because tracking devices are
-        non-human clients.
+        Device-origin telemetry route. `X-Device-Token` is the preferred credential for
+        tracking devices. A device can submit pings only for its own assigned device and
+        tuk-tuk relationship.
       operationId: createLocationPing
       security:
         - DeviceTokenAuth: []
-        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -603,44 +1062,44 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateLocationPingRequest'
             example:
-              tukTukId: ttk_01HQ4D0FQY9ZV7A9X4T6P2N8MR
-              deviceId: dev_01HQ4C9W5WRD08HX8PSBNM8D2G
-              provinceId: prv_western
-              districtId: dst_colombo
-              stationId: stn_fort
+              tukTukId: cm9x7a1bc0006abc123456789
+              deviceId: cm9x7a1bc0005abc123456789
+              provinceId: cm9x7a1bc0001abc123456789
+              districtId: cm9x7a1bc0002abc123456789
+              stationId: cm9x7a1bc0003abc123456789
               latitude: 6.927079
               longitude: 79.861244
-              speedKph: 34.6
+              speedKmh: 34.6
               heading: 176.4
               accuracyM: 5.2
-              recordedAt: '2026-04-26T08:25:12.000Z'
+              ignitionOn: true
+              recordedAt: '2026-04-29T06:25:12.000Z'
       responses:
         '201':
           description: Location ping accepted
-          headers:
-            Location:
-              $ref: '#/components/headers/Location'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LocationPingCreatedResponse'
+                $ref: '#/components/schemas/LocationPingSingleResponse'
               example:
                 success: true
-                message: Location ping accepted.
+                message: Location ping accepted successfully.
                 data:
-                  id: lpg_01HQ4DD9WQ6TSQ6R5QX8W6TN7M
-                  tukTukId: ttk_01HQ4D0FQY9ZV7A9X4T6P2N8MR
-                  deviceId: dev_01HQ4C9W5WRD08HX8PSBNM8D2G
-                  provinceId: prv_western
-                  districtId: dst_colombo
-                  stationId: stn_fort
+                  id: cm9x7a1bc0010abc123456789
+                  tukTukId: cm9x7a1bc0006abc123456789
+                  deviceId: cm9x7a1bc0005abc123456789
+                  provinceId: cm9x7a1bc0001abc123456789
+                  districtId: cm9x7a1bc0002abc123456789
+                  stationId: cm9x7a1bc0003abc123456789
                   latitude: 6.927079
                   longitude: 79.861244
-                  speedKph: 34.6
+                  speedKmh: 34.6
                   heading: 176.4
                   accuracyM: 5.2
-                  recordedAt: '2026-04-26T08:25:12.000Z'
-                  receivedAt: '2026-04-26T08:25:13.000Z'
+                  ignitionOn: true
+                  recordedAt: '2026-04-29T06:25:12.000Z'
+                  receivedAt: '2026-04-29T06:25:13.000Z'
+                  createdAt: '2026-04-29T06:25:13.000Z'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -659,27 +1118,28 @@ paths:
   /locations/live:
     get:
       tags: [Locations]
-      summary: List current live locations
+      summary: List live tuk-tuk locations
       operationId: listCurrentLocations
       security:
         - BearerAuth: []
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/SortByLiveLocation'
-        - $ref: '#/components/parameters/SortOrder'
+        - $ref: '#/components/parameters/Search'
         - $ref: '#/components/parameters/ProvinceId'
         - $ref: '#/components/parameters/DistrictId'
         - $ref: '#/components/parameters/StationId'
         - $ref: '#/components/parameters/TukTukId'
         - $ref: '#/components/parameters/DeviceId'
-        - $ref: '#/components/parameters/RecordedAfter'
-        - $ref: '#/components/parameters/RecordedBefore'
+        - $ref: '#/components/parameters/TukTukStatus'
+        - $ref: '#/components/parameters/UpdatedAfter'
+        - $ref: '#/components/parameters/LiveLocationSortBy'
+        - $ref: '#/components/parameters/SortOrderDesc'
         - $ref: '#/components/parameters/IfNoneMatch'
         - $ref: '#/components/parameters/IfModifiedSince'
       responses:
         '200':
-          description: Live location list returned successfully
+          description: Current live locations returned successfully
           headers:
             ETag:
               $ref: '#/components/headers/ETag'
@@ -691,8 +1151,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CurrentLocationListResponse'
+              example:
+                success: true
+                message: Current live locations fetched successfully.
+                data:
+                  - id: cm9x7a1bc0011abc123456789
+                    tukTukId: cm9x7a1bc0006abc123456789
+                    deviceId: cm9x7a1bc0005abc123456789
+                    provinceId: cm9x7a1bc0001abc123456789
+                    districtId: cm9x7a1bc0002abc123456789
+                    stationId: cm9x7a1bc0003abc123456789
+                    latitude: 6.927079
+                    longitude: 79.861244
+                    speedKmh: 34.6
+                    heading: 176.4
+                    accuracyM: 5.2
+                    ignitionOn: true
+                    recordedAt: '2026-04-29T06:25:12.000Z'
+                    receivedAt: '2026-04-29T06:25:13.000Z'
+                    createdAt: '2026-04-29T06:25:13.000Z'
+                    updatedAt: '2026-04-29T06:25:13.000Z'
+                    tukTuk:
+                      id: cm9x7a1bc0006abc123456789
+                      registrationNumber: REG-2026-000145
+                      plateNumber: WP CAB-4567
+                      model: Bajaj RE
+                      status: ACTIVE
+                    device:
+                      id: cm9x7a1bc0005abc123456789
+                      serialNumber: TD-0005
+                      status: ACTIVE
+                      lastSeenAt: '2026-04-29T06:25:12.000Z'
+                meta:
+                  page: 1
+                  limit: 20
+                  totalItems: 1
+                  totalPages: 1
         '304':
           $ref: '#/components/responses/NotModified'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -705,7 +1203,7 @@ paths:
   /locations/live/{tukTukId}:
     get:
       tags: [Locations]
-      summary: Get the last-known live location for a specific tuk-tuk
+      summary: Get the current live location for a tuk-tuk
       operationId: getCurrentLocationByTukTukId
       security:
         - BearerAuth: []
@@ -715,7 +1213,7 @@ paths:
         - $ref: '#/components/parameters/IfModifiedSince'
       responses:
         '200':
-          description: Live location returned successfully
+          description: Current live location returned successfully
           headers:
             ETag:
               $ref: '#/components/headers/ETag'
@@ -743,29 +1241,65 @@ paths:
   /locations/history:
     get:
       tags: [Locations]
-      summary: Query historical movement pings by time window
+      summary: Query historical location pings
       operationId: getLocationHistory
       security:
         - BearerAuth: []
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
-        - $ref: '#/components/parameters/SortByLocationHistory'
-        - $ref: '#/components/parameters/SortOrder'
         - $ref: '#/components/parameters/ProvinceId'
         - $ref: '#/components/parameters/DistrictId'
         - $ref: '#/components/parameters/StationId'
         - $ref: '#/components/parameters/TukTukId'
         - $ref: '#/components/parameters/DeviceId'
-        - $ref: '#/components/parameters/RecordedAfter'
-        - $ref: '#/components/parameters/RecordedBefore'
+        - $ref: '#/components/parameters/FromTime'
+        - $ref: '#/components/parameters/ToTime'
+        - $ref: '#/components/parameters/IgnitionOn'
+        - $ref: '#/components/parameters/LocationHistorySortBy'
+        - $ref: '#/components/parameters/SortOrderDesc'
+        - $ref: '#/components/parameters/IfNoneMatch'
+        - $ref: '#/components/parameters/IfModifiedSince'
       responses:
         '200':
-          description: Movement history returned successfully
+          description: Location history returned successfully
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+            Last-Modified:
+              $ref: '#/components/headers/LastModified'
+            Cache-Control:
+              $ref: '#/components/headers/CacheControl'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LocationHistoryResponse'
+                $ref: '#/components/schemas/LocationPingListResponse'
+              example:
+                success: true
+                message: Movement history fetched successfully.
+                data:
+                  - id: cm9x7a1bc0010abc123456789
+                    tukTukId: cm9x7a1bc0006abc123456789
+                    deviceId: cm9x7a1bc0005abc123456789
+                    provinceId: cm9x7a1bc0001abc123456789
+                    districtId: cm9x7a1bc0002abc123456789
+                    stationId: cm9x7a1bc0003abc123456789
+                    latitude: 6.927079
+                    longitude: 79.861244
+                    speedKmh: 34.6
+                    heading: 176.4
+                    accuracyM: 5.2
+                    ignitionOn: true
+                    recordedAt: '2026-04-29T06:25:12.000Z'
+                    receivedAt: '2026-04-29T06:25:13.000Z'
+                    createdAt: '2026-04-29T06:25:13.000Z'
+                meta:
+                  page: 1
+                  limit: 20
+                  totalItems: 1
+                  totalPages: 1
+        '304':
+          $ref: '#/components/responses/NotModified'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -790,32 +1324,30 @@ components:
       type: apiKey
       in: header
       name: X-Device-Token
-      description: >
-        Device-ingestion token for telemetry submission routes such as
-        `POST /locations/pings`.
+      description: Device token used for telemetry ingestion routes.
 
   headers:
     ETag:
-      description: Entity tag used for conditional GET caching.
+      description: Weak entity tag for conditional GET support.
       schema:
         type: string
-      example: W/"dG9rZW4tZXRhZy0xMjM0NTY"
+      example: W/"S2JkQm5GQ1hPVEp5R0FxQ0pmVQ"
     LastModified:
-      description: Last modification timestamp of the response resource.
+      description: Last modification timestamp for conditional GET support.
       schema:
         type: string
         format: date-time
-      example: '2026-04-26T08:25:13.000Z'
+      example: '2026-04-29T06:25:13.000Z'
     CacheControl:
-      description: Cache directive for clients and intermediaries.
+      description: Cache directive for the returned representation.
       schema:
         type: string
       example: private, max-age=30, must-revalidate
     Location:
-      description: URI of the created resource.
+      description: Relative URI of the created resource.
       schema:
         type: string
-      example: /api/v1/tuk-tuks/ttk_01HQ4D0FQY9ZV7A9X4T6P2N8MR
+      example: /api/v1/tuk-tuks/cm9x7a1bc0006abc123456789
 
   parameters:
     IdPath:
@@ -848,14 +1380,190 @@ components:
         minimum: 1
         maximum: 100
         default: 20
-      description: Page size.
+      description: Number of records per page.
     Search:
       name: search
       in: query
       schema:
         type: string
       description: Free-text search term.
-    SortOrder:
+    ProvinceId:
+      name: provinceId
+      in: query
+      schema:
+        type: string
+      description: Filter by province ID.
+    ProvinceCode:
+      name: provinceCode
+      in: query
+      schema:
+        type: string
+      description: Filter by province code.
+    DistrictId:
+      name: districtId
+      in: query
+      schema:
+        type: string
+      description: Filter by district ID.
+    StationId:
+      name: stationId
+      in: query
+      schema:
+        type: string
+      description: Filter by station ID.
+    DriverId:
+      name: driverId
+      in: query
+      schema:
+        type: string
+      description: Filter by driver ID.
+    DeviceId:
+      name: deviceId
+      in: query
+      schema:
+        type: string
+      description: Filter by device ID.
+    TukTukId:
+      name: tukTukId
+      in: query
+      schema:
+        type: string
+      description: Filter by tuk-tuk ID.
+    IsActive:
+      name: isActive
+      in: query
+      schema:
+        type: boolean
+      description: Filter by active status.
+    LicenseNumber:
+      name: licenseNumber
+      in: query
+      schema:
+        type: string
+      description: Filter by exact driver license number.
+    NationalId:
+      name: nationalId
+      in: query
+      schema:
+        type: string
+      description: Filter by exact driver national ID.
+    PlateNumber:
+      name: plateNumber
+      in: query
+      schema:
+        type: string
+      description: Filter by exact tuk-tuk plate number.
+    RegistrationNumber:
+      name: registrationNumber
+      in: query
+      schema:
+        type: string
+      description: Filter by exact tuk-tuk registration number.
+    SerialNumber:
+      name: serialNumber
+      in: query
+      schema:
+        type: string
+      description: Filter by exact device serial number.
+    UserRole:
+      name: role
+      in: query
+      schema:
+        $ref: '#/components/schemas/UserRole'
+      description: Filter by user role.
+    TukTukStatus:
+      name: status
+      in: query
+      schema:
+        $ref: '#/components/schemas/TukTukStatus'
+      description: Filter by tuk-tuk status.
+    DeviceStatus:
+      name: status
+      in: query
+      schema:
+        $ref: '#/components/schemas/DeviceStatus'
+      description: Filter by device status.
+    ProvinceSortBy:
+      name: sortBy
+      in: query
+      schema:
+        type: string
+        enum: [createdAt, updatedAt, name, code]
+        default: name
+      description: Province sort field.
+    DistrictSortBy:
+      name: sortBy
+      in: query
+      schema:
+        type: string
+        enum: [createdAt, updatedAt, name, code]
+        default: name
+      description: District sort field.
+    StationSortBy:
+      name: sortBy
+      in: query
+      schema:
+        type: string
+        enum: [createdAt, updatedAt, name, code]
+        default: name
+      description: Police station sort field.
+    DriverSortBy:
+      name: sortBy
+      in: query
+      schema:
+        type: string
+        enum: [createdAt, updatedAt, fullName, licenseNumber]
+        default: createdAt
+      description: Driver sort field.
+    TukTukSortBy:
+      name: sortBy
+      in: query
+      schema:
+        type: string
+        enum: [createdAt, updatedAt, registrationNumber, status]
+        default: createdAt
+      description: Tuk-tuk sort field.
+    DeviceSortBy:
+      name: sortBy
+      in: query
+      schema:
+        type: string
+        enum: [createdAt, updatedAt, serialNumber, status]
+        default: createdAt
+      description: Device sort field.
+    UserSortBy:
+      name: sortBy
+      in: query
+      schema:
+        type: string
+        enum: [createdAt, updatedAt, fullName, email, role]
+        default: createdAt
+      description: User sort field.
+    LiveLocationSortBy:
+      name: sortBy
+      in: query
+      schema:
+        type: string
+        enum: [recordedAt, receivedAt, updatedAt, createdAt]
+        default: recordedAt
+      description: Live location sort field.
+    LocationHistorySortBy:
+      name: sortBy
+      in: query
+      schema:
+        type: string
+        enum: [recordedAt, receivedAt, createdAt]
+        default: recordedAt
+      description: History sort field.
+    SortOrderAsc:
+      name: sortOrder
+      in: query
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: asc
+      description: Sort direction.
+    SortOrderDesc:
       name: sortOrder
       in: query
       schema:
@@ -863,157 +1571,50 @@ components:
         enum: [asc, desc]
         default: desc
       description: Sort direction.
-    SortByProvince:
-      name: sortBy
+    UpdatedAfter:
+      name: updatedAfter
       in: query
       schema:
         type: string
-        enum: [name, code, createdAt, updatedAt]
-        default: name
-    SortByDistrict:
-      name: sortBy
+        format: date-time
+      description: Return only live records updated on or after this timestamp.
+    FromTime:
+      name: from
       in: query
       schema:
         type: string
-        enum: [name, code, createdAt, updatedAt]
-        default: name
-    SortByStation:
-      name: sortBy
+        format: date-time
+      description: Inclusive start of the requested time range.
+    ToTime:
+      name: to
       in: query
       schema:
         type: string
-        enum: [name, code, createdAt, updatedAt]
-        default: name
-    SortByDriver:
-      name: sortBy
-      in: query
-      schema:
-        type: string
-        enum: [fullName, licenseNumber, createdAt, updatedAt]
-        default: createdAt
-    SortByTukTuk:
-      name: sortBy
-      in: query
-      schema:
-        type: string
-        enum: [registrationNumber, plateNumber, status, createdAt, updatedAt]
-        default: createdAt
-    SortByDevice:
-      name: sortBy
-      in: query
-      schema:
-        type: string
-        enum: [serialNumber, status, lastSeenAt, createdAt, updatedAt]
-        default: createdAt
-    SortByUser:
-      name: sortBy
-      in: query
-      schema:
-        type: string
-        enum: [fullName, email, role, createdAt, updatedAt]
-        default: createdAt
-    SortByLiveLocation:
-      name: sortBy
-      in: query
-      schema:
-        type: string
-        enum: [recordedAt, receivedAt]
-        default: recordedAt
-    SortByLocationHistory:
-      name: sortBy
-      in: query
-      schema:
-        type: string
-        enum: [recordedAt, receivedAt, createdAt]
-        default: recordedAt
-    ProvinceId:
-      name: provinceId
-      in: query
-      schema:
-        type: string
-      description: Filter by province.
-    DistrictId:
-      name: districtId
-      in: query
-      schema:
-        type: string
-      description: Filter by district.
-    StationId:
-      name: stationId
-      in: query
-      schema:
-        type: string
-      description: Filter by police station.
-    DriverId:
-      name: driverId
-      in: query
-      schema:
-        type: string
-      description: Filter by assigned driver.
-    DeviceId:
-      name: deviceId
-      in: query
-      schema:
-        type: string
-      description: Filter by tracking device.
-    TukTukId:
-      name: tukTukId
-      in: query
-      schema:
-        type: string
-      description: Filter by tuk-tuk.
-    TukTukStatus:
-      name: status
-      in: query
-      schema:
-        $ref: '#/components/schemas/TukTukStatus'
-    DeviceStatus:
-      name: status
-      in: query
-      schema:
-        $ref: '#/components/schemas/DeviceStatus'
-    UserRole:
-      name: role
-      in: query
-      schema:
-        $ref: '#/components/schemas/UserRole'
-    IncludeInactive:
-      name: includeInactive
+        format: date-time
+      description: Inclusive end of the requested time range.
+    IgnitionOn:
+      name: ignitionOn
       in: query
       schema:
         type: boolean
-        default: false
-    RecordedAfter:
-      name: startTime
-      in: query
-      schema:
-        type: string
-        format: date-time
-      description: Inclusive start of the requested time window.
-    RecordedBefore:
-      name: endTime
-      in: query
-      schema:
-        type: string
-        format: date-time
-      description: Inclusive end of the requested time window.
+      description: Filter by ignition state.
     IfNoneMatch:
       name: If-None-Match
       in: header
       schema:
         type: string
-      description: Conditional GET validator using the response ETag.
+      description: Conditional GET validator based on the last returned ETag.
     IfModifiedSince:
       name: If-Modified-Since
       in: header
       schema:
         type: string
         format: date-time
-      description: Conditional GET validator using resource modification time.
+      description: Conditional GET validator based on resource modification time.
 
   responses:
     NotModified:
-      description: Resource has not changed since the provided validator.
+      description: Resource has not changed since the supplied cache validator.
       headers:
         ETag:
           $ref: '#/components/headers/ETag'
@@ -1022,7 +1623,7 @@ components:
         Cache-Control:
           $ref: '#/components/headers/CacheControl'
     BadRequest:
-      description: Request could not be processed because it is malformed.
+      description: Request failed validation or query parsing.
       content:
         application/json:
           schema:
@@ -1031,10 +1632,10 @@ components:
             success: false
             message: Validation failed.
             errors:
-              - path: body.recordedAt
-                message: Invalid datetime string.
+              - path: query.limit
+                message: Number must be less than or equal to 100.
     Unauthorized:
-      description: Authentication failed or token is missing.
+      description: Authentication failed or credentials are missing.
       content:
         application/json:
           schema:
@@ -1043,7 +1644,7 @@ components:
             success: false
             message: Authentication token is required.
     Forbidden:
-      description: Authenticated caller does not have sufficient permission.
+      description: Authenticated caller does not have access to this resource or scope.
       content:
         application/json:
           schema:
@@ -1061,28 +1662,25 @@ components:
             success: false
             message: Requested resource was not found.
     Conflict:
-      description: Request conflicts with an existing resource.
+      description: Request would violate a unique constraint.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
             success: false
-            message: A tuk-tuk with this registration number already exists.
+            message: A unique constraint would be violated by this request.
     UnprocessableEntity:
-      description: Request was syntactically valid but semantically invalid.
+      description: Request is valid JSON but violates a business rule.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
           example:
             success: false
-            message: The submitted data could not be processed.
-            errors:
-              - path: body.deviceId
-                message: Tracking device is already assigned to another tuk-tuk.
+            message: Tracking device is already assigned to another tuk-tuk.
     TooManyRequests:
-      description: Caller exceeded the allowed request rate.
+      description: Rate limit exceeded.
       content:
         application/json:
           schema:
@@ -1091,7 +1689,7 @@ components:
             success: false
             message: Too many requests, please try again later.
     InternalServerError:
-      description: Unexpected server error.
+      description: Unexpected server-side failure.
       content:
         application/json:
           schema:
@@ -1128,19 +1726,27 @@ components:
       properties:
         page:
           type: integer
+          example: 1
         limit:
           type: integer
+          example: 20
         totalItems:
           type: integer
+          example: 25
         totalPages:
           type: integer
+          example: 2
+      required: [page, limit, totalItems, totalPages]
     ErrorItem:
       type: object
       properties:
         path:
           type: string
+          example: body.provinceId
         message:
           type: string
+          example: Invalid input.
+      required: [path, message]
     ErrorResponse:
       type: object
       properties:
@@ -1149,11 +1755,26 @@ components:
           example: false
         message:
           type: string
+          example: Validation failed.
         errors:
           type: array
           items:
             $ref: '#/components/schemas/ErrorItem'
-    Province:
+      required: [success, message]
+    GenericSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Request completed successfully.
+        data:
+          nullable: true
+      required: [success, message, data]
+
+    ProvinceSummary:
       type: object
       properties:
         id:
@@ -1162,12 +1783,88 @@ components:
           type: string
         code:
           type: string
-        createdAt:
+      required: [id, name, code]
+    DistrictSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        code:
+          type: string
+      required: [id, name, code]
+    StationSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        code:
+          type: string
+      required: [id, name, code]
+    DriverSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        fullName:
+          type: string
+        licenseNumber:
+          type: string
+        isActive:
+          type: boolean
+      required: [id, fullName, licenseNumber, isActive]
+    DeviceSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        serialNumber:
+          type: string
+        status:
+          $ref: '#/components/schemas/DeviceStatus'
+        lastSeenAt:
           type: string
           format: date-time
-        updatedAt:
+          nullable: true
+      required: [id, serialNumber, status]
+    AssignedTukTukSummary:
+      type: object
+      properties:
+        id:
           type: string
-          format: date-time
+        registrationNumber:
+          type: string
+        plateNumber:
+          type: string
+        provinceId:
+          type: string
+          nullable: true
+        districtId:
+          type: string
+          nullable: true
+        stationId:
+          type: string
+          nullable: true
+        deviceId:
+          type: string
+          nullable: true
+      required: [id, registrationNumber, plateNumber]
+
+    Province:
+      allOf:
+        - $ref: '#/components/schemas/ProvinceSummary'
+        - type: object
+          properties:
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+          required: [createdAt, updatedAt]
     District:
       type: object
       properties:
@@ -1179,12 +1876,15 @@ components:
           type: string
         code:
           type: string
+        province:
+          $ref: '#/components/schemas/ProvinceSummary'
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
+      required: [id, provinceId, name, code, province, createdAt, updatedAt]
     PoliceStation:
       type: object
       properties:
@@ -1203,26 +1903,35 @@ components:
         contactNumber:
           type: string
           nullable: true
+        isActive:
+          type: boolean
+        province:
+          $ref: '#/components/schemas/ProvinceSummary'
+        district:
+          $ref: '#/components/schemas/DistrictSummary'
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
+      required:
+        - id
+        - provinceId
+        - districtId
+        - name
+        - code
+        - address
+        - isActive
+        - province
+        - district
+        - createdAt
+        - updatedAt
     Driver:
       type: object
       properties:
         id:
           type: string
-        fullName:
-          type: string
-        nationalId:
-          type: string
-        licenseNumber:
-          type: string
-        phoneNumber:
-          type: string
-          nullable: true
         provinceId:
           type: string
           nullable: true
@@ -1232,14 +1941,114 @@ components:
         stationId:
           type: string
           nullable: true
+        fullName:
+          type: string
+        nationalId:
+          type: string
+        licenseNumber:
+          type: string
+        phoneNumber:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
         isActive:
           type: boolean
+        province:
+          allOf:
+            - $ref: '#/components/schemas/ProvinceSummary'
+          nullable: true
+        district:
+          allOf:
+            - $ref: '#/components/schemas/DistrictSummary'
+          nullable: true
+        station:
+          allOf:
+            - $ref: '#/components/schemas/StationSummary'
+          nullable: true
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
+      required:
+        - id
+        - fullName
+        - nationalId
+        - licenseNumber
+        - isActive
+        - createdAt
+        - updatedAt
+    TukTuk:
+      type: object
+      properties:
+        id:
+          type: string
+        provinceId:
+          type: string
+          nullable: true
+        districtId:
+          type: string
+          nullable: true
+        stationId:
+          type: string
+          nullable: true
+        driverId:
+          type: string
+          nullable: true
+        deviceId:
+          type: string
+          nullable: true
+        registrationNumber:
+          type: string
+        plateNumber:
+          type: string
+        model:
+          type: string
+        color:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/TukTukStatus'
+        notes:
+          type: string
+          nullable: true
+        province:
+          allOf:
+            - $ref: '#/components/schemas/ProvinceSummary'
+          nullable: true
+        district:
+          allOf:
+            - $ref: '#/components/schemas/DistrictSummary'
+          nullable: true
+        station:
+          allOf:
+            - $ref: '#/components/schemas/StationSummary'
+          nullable: true
+        driver:
+          allOf:
+            - $ref: '#/components/schemas/DriverSummary'
+          nullable: true
+        device:
+          allOf:
+            - $ref: '#/components/schemas/DeviceSummary'
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - registrationNumber
+        - plateNumber
+        - model
+        - status
+        - createdAt
+        - updatedAt
     TrackingDevice:
       type: object
       properties:
@@ -1266,28 +2075,31 @@ components:
           type: string
           format: date-time
           nullable: true
+        lastAuthenticatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        assignedTukTuk:
+          allOf:
+            - $ref: '#/components/schemas/AssignedTukTukSummary'
+          nullable: true
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
-    TukTuk:
+      required:
+        - id
+        - serialNumber
+        - status
+        - createdAt
+        - updatedAt
+    User:
       type: object
       properties:
         id:
           type: string
-        registrationNumber:
-          type: string
-        plateNumber:
-          type: string
-        model:
-          type: string
-        color:
-          type: string
-          nullable: true
-        status:
-          $ref: '#/components/schemas/TukTukStatus'
         provinceId:
           type: string
           nullable: true
@@ -1297,26 +2109,6 @@ components:
         stationId:
           type: string
           nullable: true
-        driverId:
-          type: string
-          nullable: true
-        deviceId:
-          type: string
-          nullable: true
-        notes:
-          type: string
-          nullable: true
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-    User:
-      type: object
-      properties:
-        id:
-          type: string
         fullName:
           type: string
         email:
@@ -1332,18 +2124,21 @@ components:
           nullable: true
         isActive:
           type: boolean
-        provinceId:
-          type: string
-          nullable: true
-        districtId:
-          type: string
-          nullable: true
-        stationId:
-          type: string
-          nullable: true
         lastLoginAt:
           type: string
           format: date-time
+          nullable: true
+        province:
+          allOf:
+            - $ref: '#/components/schemas/ProvinceSummary'
+          nullable: true
+        district:
+          allOf:
+            - $ref: '#/components/schemas/DistrictSummary'
+          nullable: true
+        station:
+          allOf:
+            - $ref: '#/components/schemas/StationSummary'
           nullable: true
         createdAt:
           type: string
@@ -1351,7 +2146,84 @@ components:
         updatedAt:
           type: string
           format: date-time
+      required:
+        - id
+        - fullName
+        - email
+        - role
+        - isActive
+        - createdAt
+        - updatedAt
     LocationPing:
+      type: object
+      properties:
+        id:
+          type: string
+        tukTukId:
+          type: string
+        deviceId:
+          type: string
+        provinceId:
+          type: string
+        districtId:
+          type: string
+        stationId:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        speedKmh:
+          type: number
+          format: double
+          nullable: true
+        heading:
+          type: number
+          format: double
+          nullable: true
+        accuracyM:
+          type: number
+          format: double
+          nullable: true
+        ignitionOn:
+          type: boolean
+          nullable: true
+        recordedAt:
+          type: string
+          format: date-time
+        receivedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        tukTuk:
+          $ref: '#/components/schemas/TukTuk'
+        device:
+          allOf:
+            - $ref: '#/components/schemas/DeviceSummary'
+          nullable: true
+        province:
+          $ref: '#/components/schemas/ProvinceSummary'
+        district:
+          $ref: '#/components/schemas/DistrictSummary'
+        station:
+          allOf:
+            - $ref: '#/components/schemas/StationSummary'
+          nullable: true
+      required:
+        - id
+        - tukTukId
+        - provinceId
+        - districtId
+        - latitude
+        - longitude
+        - recordedAt
+        - receivedAt
+    CurrentLocation:
       type: object
       properties:
         id:
@@ -1374,7 +2246,7 @@ components:
         longitude:
           type: number
           format: double
-        speedKph:
+        speedKmh:
           type: number
           format: double
           nullable: true
@@ -1385,6 +2257,9 @@ components:
         accuracyM:
           type: number
           format: double
+          nullable: true
+        ignitionOn:
+          type: boolean
           nullable: true
         recordedAt:
           type: string
@@ -1395,71 +2270,311 @@ components:
         createdAt:
           type: string
           format: date-time
-    CurrentLocation:
-      type: object
-      properties:
-        tukTukId:
-          type: string
-        deviceId:
-          type: string
-          nullable: true
-        provinceId:
-          type: string
-        districtId:
-          type: string
-        stationId:
-          type: string
-          nullable: true
-        latitude:
-          type: number
-          format: double
-        longitude:
-          type: number
-          format: double
-        speedKph:
-          type: number
-          format: double
-          nullable: true
-        heading:
-          type: number
-          format: double
-          nullable: true
-        accuracyM:
-          type: number
-          format: double
-          nullable: true
-        recordedAt:
-          type: string
-          format: date-time
-        receivedAt:
-          type: string
-          format: date-time
         updatedAt:
           type: string
           format: date-time
+        tukTuk:
+          $ref: '#/components/schemas/TukTuk'
+        device:
+          allOf:
+            - $ref: '#/components/schemas/DeviceSummary'
+          nullable: true
+        province:
+          $ref: '#/components/schemas/ProvinceSummary'
+        district:
+          $ref: '#/components/schemas/DistrictSummary'
+        station:
+          allOf:
+            - $ref: '#/components/schemas/StationSummary'
+          nullable: true
+      required:
+        - id
+        - tukTukId
+        - provinceId
+        - districtId
+        - latitude
+        - longitude
+        - recordedAt
+        - receivedAt
+        - createdAt
+        - updatedAt
+
+    ProvinceSingleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Province fetched successfully.
+        data:
+          $ref: '#/components/schemas/Province'
+      required: [success, message, data]
+    ProvinceListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Provinces fetched successfully.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Province'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required: [success, message, data, meta]
+    DistrictSingleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: District fetched successfully.
+        data:
+          $ref: '#/components/schemas/District'
+      required: [success, message, data]
+    DistrictListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Districts fetched successfully.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/District'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required: [success, message, data, meta]
+    StationSingleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Police station fetched successfully.
+        data:
+          $ref: '#/components/schemas/PoliceStation'
+      required: [success, message, data]
+    StationListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Police stations fetched successfully.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PoliceStation'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required: [success, message, data, meta]
+    DriverSingleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Driver fetched successfully.
+        data:
+          $ref: '#/components/schemas/Driver'
+      required: [success, message, data]
+    DriverListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Drivers fetched successfully.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Driver'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required: [success, message, data, meta]
+    TukTukSingleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Tuk-tuk fetched successfully.
+        data:
+          $ref: '#/components/schemas/TukTuk'
+      required: [success, message, data]
+    TukTukListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Tuk-tuks fetched successfully.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TukTuk'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required: [success, message, data, meta]
+    DeviceSingleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Device fetched successfully.
+        data:
+          $ref: '#/components/schemas/TrackingDevice'
+      required: [success, message, data]
+    DeviceListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Devices fetched successfully.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingDevice'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required: [success, message, data, meta]
+    UserSingleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: User fetched successfully.
+        data:
+          $ref: '#/components/schemas/User'
+      required: [success, message, data]
+    UserListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Users fetched successfully.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required: [success, message, data, meta]
+    LocationPingSingleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Location ping accepted.
+        data:
+          $ref: '#/components/schemas/LocationPing'
+      required: [success, message, data]
+    LocationPingListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Location history fetched successfully.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationPing'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required: [success, message, data, meta]
+    CurrentLocationSingleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Current location fetched successfully.
+        data:
+          $ref: '#/components/schemas/CurrentLocation'
+      required: [success, message, data]
+    CurrentLocationListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Current locations fetched successfully.
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CurrentLocation'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required: [success, message, data, meta]
+
     LoginRequest:
       type: object
-      required: [email, password]
       properties:
         email:
           type: string
           format: email
         password:
           type: string
-          minLength: 8
+          format: password
+      required: [email, password]
     RefreshRequest:
       type: object
-      required: [refreshToken]
       properties:
         refreshToken:
           type: string
+      required: [refreshToken]
     LogoutRequest:
       type: object
-      required: [refreshToken]
       properties:
         refreshToken:
           type: string
-    AuthenticatedUser:
+      required: [refreshToken]
+    AuthUser:
       type: object
       properties:
         id:
@@ -1480,40 +2595,144 @@ components:
         stationId:
           type: string
           nullable: true
+      required: [id, fullName, email, role]
+    AuthSuccessPayload:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        tokenType:
+          type: string
+          example: Bearer
+        accessTokenExpiresIn:
+          type: string
+          example: 15m
+        refreshTokenExpiresIn:
+          type: string
+          example: 7d
+        user:
+          $ref: '#/components/schemas/AuthUser'
+      required:
+        - accessToken
+        - refreshToken
+        - tokenType
+        - accessTokenExpiresIn
+        - refreshTokenExpiresIn
+        - user
     AuthSuccessResponse:
       type: object
       properties:
         success:
           type: boolean
+          example: true
         message:
           type: string
+          example: Login successful.
         data:
-          type: object
-          properties:
-            accessToken:
-              type: string
-            refreshToken:
-              type: string
-            tokenType:
-              type: string
-              example: Bearer
-            accessTokenExpiresIn:
-              type: string
-            refreshTokenExpiresIn:
-              type: string
-            user:
-              $ref: '#/components/schemas/AuthenticatedUser'
-    GenericSuccessResponse:
+          $ref: '#/components/schemas/AuthSuccessPayload'
+      required: [success, message, data]
+
+    CreateStationRequest:
       type: object
       properties:
-        success:
-          type: boolean
-        message:
+        name:
           type: string
-        data:
-          nullable: true
+        code:
+          type: string
+        address:
+          type: string
+        contactNumber:
+          type: string
+        provinceId:
+          type: string
+        districtId:
+          type: string
+        isActive:
+          type: boolean
+          default: true
+      required: [name, code, address, provinceId, districtId]
+    UpdateStationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        address:
+          type: string
+        contactNumber:
+          type: string
+        provinceId:
+          type: string
+        districtId:
+          type: string
+        isActive:
+          type: boolean
+    CreateDriverRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+        nationalId:
+          type: string
+        licenseNumber:
+          type: string
+        phoneNumber:
+          type: string
+        address:
+          type: string
+        stationId:
+          type: string
+        isActive:
+          type: boolean
+          default: true
+      required: [fullName, nationalId, licenseNumber, stationId]
+    UpdateDriverRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+        nationalId:
+          type: string
+        licenseNumber:
+          type: string
+        phoneNumber:
+          type: string
+        address:
+          type: string
+        stationId:
+          type: string
+        isActive:
+          type: boolean
     CreateTukTukRequest:
       type: object
+      properties:
+        registrationNumber:
+          type: string
+        plateNumber:
+          type: string
+        color:
+          type: string
+        model:
+          type: string
+        provinceId:
+          type: string
+        districtId:
+          type: string
+        stationId:
+          type: string
+        driverId:
+          type: string
+          nullable: true
+        deviceId:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/TukTukStatus'
+        notes:
+          type: string
       required:
         - registrationNumber
         - plateNumber
@@ -1521,29 +2740,6 @@ components:
         - provinceId
         - districtId
         - stationId
-      properties:
-        registrationNumber:
-          type: string
-        plateNumber:
-          type: string
-        model:
-          type: string
-        color:
-          type: string
-        status:
-          $ref: '#/components/schemas/TukTukStatus'
-        provinceId:
-          type: string
-        districtId:
-          type: string
-        stationId:
-          type: string
-        driverId:
-          type: string
-        deviceId:
-          type: string
-        notes:
-          type: string
     UpdateTukTukRequest:
       type: object
       properties:
@@ -1551,12 +2747,10 @@ components:
           type: string
         plateNumber:
           type: string
-        model:
-          type: string
         color:
           type: string
-        status:
-          $ref: '#/components/schemas/TukTukStatus'
+        model:
+          type: string
         provinceId:
           type: string
         districtId:
@@ -1565,173 +2759,152 @@ components:
           type: string
         driverId:
           type: string
+          nullable: true
         deviceId:
           type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/TukTukStatus'
         notes:
           type: string
-    CreateLocationPingRequest:
+    CreateDeviceRequest:
       type: object
-      required:
-        - tukTukId
-        - provinceId
-        - districtId
-        - latitude
-        - longitude
-        - recordedAt
       properties:
+        serialNumber:
+          type: string
+        imei:
+          type: string
+        simNumber:
+          type: string
+        firmwareVersion:
+          type: string
+        status:
+          $ref: '#/components/schemas/DeviceStatus'
         tukTukId:
           type: string
-        deviceId:
+          nullable: true
+      required: [serialNumber]
+    UpdateDeviceRequest:
+      type: object
+      properties:
+        serialNumber:
           type: string
+        imei:
+          type: string
+        simNumber:
+          type: string
+        firmwareVersion:
+          type: string
+        status:
+          $ref: '#/components/schemas/DeviceStatus'
+        tukTukId:
+          type: string
+          nullable: true
+    CreateUserRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        badgeNumber:
+          type: string
+        password:
+          type: string
+          format: password
+        phoneNumber:
+          type: string
+        role:
+          type: string
+          enum:
+            - HQ_ADMIN
+            - PROVINCIAL_ADMIN
+            - DISTRICT_OFFICER
+            - STATION_OFFICER
         provinceId:
           type: string
         districtId:
           type: string
         stationId:
           type: string
+        isActive:
+          type: boolean
+          default: true
+      required: [fullName, email, password, role]
+    UpdateUserRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        badgeNumber:
+          type: string
+        password:
+          type: string
+          format: password
+        phoneNumber:
+          type: string
+        role:
+          type: string
+          enum:
+            - HQ_ADMIN
+            - PROVINCIAL_ADMIN
+            - DISTRICT_OFFICER
+            - STATION_OFFICER
+        provinceId:
+          type: string
+          nullable: true
+        districtId:
+          type: string
+          nullable: true
+        stationId:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+    CreateLocationPingRequest:
+      type: object
+      properties:
+        tukTukId:
+          type: string
+        deviceId:
+          type: string
+          nullable: true
+        provinceId:
+          type: string
+        districtId:
+          type: string
+        stationId:
+          type: string
+          nullable: true
         latitude:
           type: number
           format: double
-          minimum: -90
-          maximum: 90
         longitude:
           type: number
           format: double
-          minimum: -180
-          maximum: 180
-        speedKph:
+        speedKmh:
           type: number
           format: double
-          minimum: 0
         heading:
           type: number
           format: double
-          minimum: 0
-          maximum: 360
         accuracyM:
           type: number
           format: double
-          minimum: 0
+        ignitionOn:
+          type: boolean
         recordedAt:
           type: string
           format: date-time
-    BaseListResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-        data:
-          type: array
-          items: {}
-        meta:
-          $ref: '#/components/schemas/PaginationMeta'
-    ProvinceListResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseListResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/Province'
-    DistrictListResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseListResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/District'
-    StationListResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseListResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/PoliceStation'
-    DriverListResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseListResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/Driver'
-    DeviceListResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseListResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/TrackingDevice'
-    UserListResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseListResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/User'
-    TukTukListResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseListResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/TukTuk'
-    CurrentLocationListResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseListResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/CurrentLocation'
-    LocationHistoryResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseListResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/LocationPing'
-    TukTukSingleResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/TukTuk'
-    CurrentLocationSingleResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/CurrentLocation'
-    LocationPingCreatedResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-        data:
-          $ref: '#/components/schemas/LocationPing'
+      required:
+        - tukTukId
+        - deviceId
+        - provinceId
+        - districtId
+        - latitude
+        - longitude
+        - recordedAt

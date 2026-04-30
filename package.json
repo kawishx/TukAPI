@@ -21,7 +21,12 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:migrate:status": "prisma migrate status",
     "prisma:studio": "prisma studio",
-    "prisma:seed": "node scripts/seed.js"
+    "prisma:seed": "node scripts/seed.js",
+    "demo:seed": "node scripts/seed.js",
+    "simulation:generate": "node scripts/generateSimulation.js",
+    "simulation:export": "node scripts/exportSimulationData.js",
+    "demo:reset": "node scripts/resetDemoData.js",
+    "demo:rebuild": "node scripts/rebuildDemoData.js"
   },
   "prisma": {
     "seed": "node scripts/seed.js"

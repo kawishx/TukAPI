@@ -2,7 +2,7 @@ import * as districtsService from './districts.service.js';
 import { sendCachedSuccess, sendSuccess } from '../../utils/apiResponse.js';
 
 export const listDistricts = async (req, res) => {
-  const result = await districtsService.listDistricts(req.query);
+  const result = await districtsService.listDistricts(req.query, req.user);
 
   return sendCachedSuccess(req, res, {
     message: 'Districts fetched successfully.',
@@ -13,7 +13,7 @@ export const listDistricts = async (req, res) => {
 };
 
 export const getDistrictById = async (req, res) => {
-  const result = await districtsService.getDistrictById(req.params.id);
+  const result = await districtsService.getDistrictById(req.params.id, req.user);
 
   return sendCachedSuccess(req, res, {
     message: 'District fetched successfully.',
@@ -22,22 +22,14 @@ export const getDistrictById = async (req, res) => {
   });
 };
 
-export const createDistrict = async (req, res) => {
-  const result = await districtsService.createDistrict(req.body);
-
-  return sendSuccess(res, {
-    statusCode: 201,
-    message: 'District scaffold record created successfully.',
-    data: result,
+export const createDistrict = (_req, res) =>
+  sendSuccess(res, {
+    statusCode: 405,
+    message: 'Districts are read-only reference data.',
   });
-};
 
-export const updateDistrict = async (req, res) => {
-  const result = await districtsService.updateDistrict(req.params.id, req.body);
-
-  return sendSuccess(res, {
-    message: 'District scaffold record updated successfully.',
-    data: result,
+export const updateDistrict = (_req, res) =>
+  sendSuccess(res, {
+    statusCode: 405,
+    message: 'Districts are read-only reference data.',
   });
-};
-

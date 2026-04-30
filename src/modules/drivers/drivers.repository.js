@@ -1,33 +1,81 @@
-export const findMany = async (_options) => ({
-  items: [],
-  totalItems: 0,
-  lastModified: new Date().toISOString(),
-});
+import prisma from '../../config/prisma.js';
+import { buildSearchWhere, combineWhere, resolveLastModified } from '../../utils/repositoryHelpers.js';
 
-export const findById = async (id) => ({
-  data: {
-    id,
-    fullName: 'Kasun Perera',
-    nationalId: '199512345678',
-    licenseNumber: 'B1234567',
-    phoneNumber: '+94771234567',
-    stationId: 'station_scaffold_id',
-    isPlaceholder: true,
+const driverInclude = {
+  province: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+    },
   },
-  lastModified: new Date().toISOString(),
-});
+  district: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+    },
+  },
+  station: {
+    select: {
+      id: true,
+      name: true,
+      code: true,
+    },
+  },
+};
 
-export const create = async (payload) => ({
-  id: 'driver_scaffold_id',
-  ...payload,
-  createdAt: new Date().toISOString(),
-  isPlaceholder: true,
-});
+export const findMany = async (options, scopeWhere) => {
+  const where = combineWhere(
+    scopeWhere,
+    options.filters.provinceId ? { provinceId: options.filters.provinceId } : {},
+    options.filters.districtId ? { districtId: options.filters.districtId } : {},
+    options.filters.stationId ? { stationId: options.filters.stationId } : {},
+    options.filters.isActive !== undefined ? { isActive: options.filters.isActive } : {},
+    options.filters.licenseNumber ? { licenseNumber: options.filters.licenseNumber } : {},
+    options.filters.nationalId ? { nationalId: options.filters.nationalId } : {},
+    buildSearchWhere(options.filters.search, ['fullName', 'licenseNumber', 'nationalId', 'phoneNumber']),
+  );
 
-export const update = async (id, payload) => ({
-  id,
-  ...payload,
-  updatedAt: new Date().toISOString(),
-  isPlaceholder: true,
-});
+  const [items, totalItems] = await Promise.all([
+    prisma.driver.findMany({
+      where,
+      include: driverInclude,
+      orderBy: options.orderBy,
+      skip: options.skip,
+      take: options.take,
+    }),
+    prisma.driver.count({ where }),
+  ]);
 
+  return {
+    items,
+    totalItems,
+    lastModified: resolveLastModified(items)?.toISOString() ?? null,
+  };
+};
+
+export const findById = async (id) => {
+  const driver = await prisma.driver.findUnique({
+    where: { id },
+    include: driverInclude,
+  });
+
+  return {
+    data: driver,
+    lastModified: driver ? (driver.updatedAt ?? driver.createdAt).toISOString() : null,
+  };
+};
+
+export const create = async (payload) =>
+  prisma.driver.create({
+    data: payload,
+    include: driverInclude,
+  });
+
+export const update = async (id, payload) =>
+  prisma.driver.update({
+    where: { id },
+    data: payload,
+    include: driverInclude,
+  });

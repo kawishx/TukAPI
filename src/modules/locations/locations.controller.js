@@ -16,6 +16,17 @@ export const createLocationPing = async (req, res) => {
   });
 };
 
+export const listLiveLocations = async (req, res) => {
+  const result = await locationsService.listLiveLocations(req.query, req.user);
+
+  return sendCachedSuccess(req, res, {
+    message: 'Current live locations fetched successfully.',
+    data: result.items,
+    meta: result.meta,
+    lastModified: result.lastModified,
+  });
+};
+
 export const getLiveLocation = async (req, res) => {
   const result = await locationsService.getLiveLocation(req.params.tukTukId, req.user);
 

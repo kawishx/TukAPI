@@ -40,6 +40,10 @@ export const authenticateDevice = async (req, _res, next) => {
       assignedTukTuk: {
         select: {
           id: true,
+          provinceId: true,
+          districtId: true,
+          stationId: true,
+          status: true,
         },
       },
     },

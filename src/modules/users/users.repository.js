@@ -1,33 +1,68 @@
-export const findMany = async (_options) => ({
-  items: [],
-  totalItems: 0,
-  lastModified: new Date().toISOString(),
-});
+import prisma from '../../config/prisma.js';
+import { buildSearchWhere, combineWhere, resolveLastModified } from '../../utils/repositoryHelpers.js';
 
-export const findById = async (id) => ({
-  data: {
-    id,
-    fullName: 'Inspector Silva',
-    email: 'inspector.silva@police.gov.lk',
-    badgeNumber: 'SLP-1001',
-    role: 'STATION_OFFICER',
-    stationId: 'station_scaffold_id',
-    isActive: true,
-    isPlaceholder: true,
+const userInclude = {
+  province: {
+    select: { id: true, name: true, code: true },
   },
-  lastModified: new Date().toISOString(),
-});
+  district: {
+    select: { id: true, name: true, code: true },
+  },
+  station: {
+    select: { id: true, name: true, code: true },
+  },
+};
 
-export const create = async (payload) => ({
-  id: 'user_scaffold_id',
-  ...payload,
-  createdAt: new Date().toISOString(),
-  isPlaceholder: true,
-});
+export const findMany = async (options, scopeWhere) => {
+  const where = combineWhere(
+    scopeWhere,
+    options.filters.role ? { role: options.filters.role } : {},
+    options.filters.provinceId ? { provinceId: options.filters.provinceId } : {},
+    options.filters.districtId ? { districtId: options.filters.districtId } : {},
+    options.filters.stationId ? { stationId: options.filters.stationId } : {},
+    options.filters.isActive !== undefined ? { isActive: options.filters.isActive } : {},
+    buildSearchWhere(options.filters.search, ['fullName', 'email', 'badgeNumber', 'phoneNumber']),
+  );
 
-export const update = async (id, payload) => ({
-  id,
-  ...payload,
-  updatedAt: new Date().toISOString(),
-  isPlaceholder: true,
-});
+  const [items, totalItems] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      include: userInclude,
+      orderBy: options.orderBy,
+      skip: options.skip,
+      take: options.take,
+    }),
+    prisma.user.count({ where }),
+  ]);
+
+  return {
+    items,
+    totalItems,
+    lastModified: resolveLastModified(items)?.toISOString() ?? null,
+  };
+};
+
+export const findById = async (id) => {
+  const user = await prisma.user.findUnique({
+    where: { id },
+    include: userInclude,
+  });
+
+  return {
+    data: user,
+    lastModified: user ? (user.updatedAt ?? user.createdAt).toISOString() : null,
+  };
+};
+
+export const create = async (payload) =>
+  prisma.user.create({
+    data: payload,
+    include: userInclude,
+  });
+
+export const update = async (id, payload) =>
+  prisma.user.update({
+    where: { id },
+    data: Object.fromEntries(Object.entries(payload).filter(([, value]) => value !== undefined)),
+    include: userInclude,
+  });

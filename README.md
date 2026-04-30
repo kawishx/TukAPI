@@ -31,7 +31,13 @@ Production-style Node.js ES Modules REST API scaffold for Sri Lanka Police tuk-t
 ├── prisma
 │   └── schema.prisma
 ├── scripts
-│   └── seed.js
+│   ├── exportSimulationData.js
+│   ├── generateSimulation.js
+│   ├── rebuildDemoData.js
+│   ├── resetDemoData.js
+│   ├── seed.js
+│   ├── simulationCatalog.js
+│   └── simulationUtils.js
 ├── src
 │   ├── app.js
 │   ├── config
@@ -121,8 +127,10 @@ Operational endpoints included in the scaffold:
 - `GET /api/v1/auth/me`
 - versioned route modules for all requested domains
 - `POST /api/v1/locations/pings`
+- `GET /api/v1/locations/live`
 - `GET /api/v1/locations/live/:tukTukId`
 - `GET /api/v1/locations/history`
+- `GET /api/v1/tuk-tuks/:id/location-history`
 - `GET /docs`
 - `GET /docs/openapi.json`
 
@@ -184,6 +192,99 @@ The scaffold includes:
    http://localhost:3000/docs
    ```
 
+## Simulation Workflow
+
+Stage 7 adds a repeatable demo-data pipeline for coursework submission and live demonstrations.
+
+Recommended demo date example:
+
+```bash
+export SIM_DEMO_DATE=2026-04-30
+```
+
+Optional simulation controls:
+
+```bash
+export SIM_SEED=stage7-demo
+export SIM_TUK_TUK_COUNT=200
+export SIM_DAYS=7
+export SIM_EXPORT_DIR=exports/simulation
+```
+
+Core commands:
+
+```bash
+npm run demo:seed
+npm run simulation:generate
+npm run simulation:export
+```
+
+Full rebuild command:
+
+```bash
+npm run demo:rebuild
+```
+
+If you want to wipe demo data first:
+
+```bash
+npm run demo:reset
+```
+
+What gets generated:
+
+- 9 provinces and 25 districts
+- 24 police stations mapped deterministically to districts
+- 200 drivers
+- 200 tuk-tuks
+- 200 tracking devices
+- 7 demo law-enforcement users across HQ, provincial, district, and station roles
+- 7 full days of historical location pings before the configured demo date
+- current live location rows for the latest ping per tuk-tuk
+
+Approximate record counts with defaults:
+
+- `Province`: 9
+- `District`: 25
+- `PoliceStation`: 24
+- `Driver`: 200
+- `TukTuk`: 200
+- `TrackingDevice`: 200
+- `LocationPing`: about 65,000 to 70,000 rows
+- `CurrentLocation`: 200
+
+Simulation design summary:
+
+- Every tuk-tuk is assigned to one home station, district, and province
+- Each day is split into morning, midday, and evening activity windows
+- Parked pings are generated overnight and during quiet periods
+- Active windows move through small route clusters around the home station with coordinate jitter
+- Historical pings are always stored, while the latest ping becomes the live location
+
+Export output:
+
+Generated evidence files are written to `exports/simulation/` by default:
+
+- `station-mapping.json`
+- `station-mapping.csv`
+- `tuk-tuk-master-data.json`
+- `tuk-tuk-master-data.csv`
+- `location-history.json`
+- `location-history.csv`
+- `simulation-summary.json`
+
+How to inspect the output:
+
+```bash
+ls exports/simulation
+```
+
+You can also inspect the database directly with:
+
+```bash
+npm run prisma:studio
+```
+
 ## Prisma Workflow
 
 Use these commands during development:
@@ -194,6 +295,8 @@ cp .env.example .env
 npm run prisma:generate
 npm run prisma:migrate:dev -- --name init
 npm run prisma:seed
+npm run simulation:generate
+npm run simulation:export
 npm run dev
 ```
 
@@ -211,6 +314,6 @@ npm run prisma:migrate:status
 
 ## Notes
 
-- Most modules remain intentionally scaffolded with TODO-ready placeholders.
-- `health` and `provinces` now demonstrate real database integration patterns using Prisma.
-- The auth flow is wired structurally, but credential verification and secure password storage should be implemented next.
+- The demo data pipeline is deterministic when `SIM_SEED` and `SIM_DEMO_DATE` are provided.
+- `npm run demo:rebuild` is the quickest way to reset, reseed, simulate, and export a clean submission dataset.
+- The simulation model is intentionally simple and explainable rather than mathematically complex.

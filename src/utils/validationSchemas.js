@@ -45,3 +45,6 @@ export const scopedListQuerySchema = baseListQuerySchema.extend({
 });
 
 export const userRoleSchema = z.enum(ALL_USER_ROLES);
+export const nullableIdSchema = z.string().trim().min(1).nullable().optional();
+export const tukTukStatusSchema = z.enum(['ACTIVE', 'INACTIVE', 'MAINTENANCE', 'IMPOUNDED']);
+export const deviceStatusSchema = z.enum(['ACTIVE', 'INACTIVE', 'MAINTENANCE', 'RETIRED']);

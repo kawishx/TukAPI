@@ -2,7 +2,7 @@ import * as driversService from './drivers.service.js';
 import { sendCachedSuccess, sendSuccess } from '../../utils/apiResponse.js';
 
 export const listDrivers = async (req, res) => {
-  const result = await driversService.listDrivers(req.query);
+  const result = await driversService.listDrivers(req.query, req.user);
 
   return sendCachedSuccess(req, res, {
     message: 'Drivers fetched successfully.',
@@ -13,7 +13,7 @@ export const listDrivers = async (req, res) => {
 };
 
 export const getDriverById = async (req, res) => {
-  const result = await driversService.getDriverById(req.params.id);
+  const result = await driversService.getDriverById(req.params.id, req.user);
 
   return sendCachedSuccess(req, res, {
     message: 'Driver fetched successfully.',
@@ -23,21 +23,22 @@ export const getDriverById = async (req, res) => {
 };
 
 export const createDriver = async (req, res) => {
-  const result = await driversService.createDriver(req.body);
+  const result = await driversService.createDriver(req.body, req.user);
+
+  res.location(`${req.baseUrl}/${result.id}`);
 
   return sendSuccess(res, {
     statusCode: 201,
-    message: 'Driver scaffold record created successfully.',
+    message: 'Driver created successfully.',
     data: result,
   });
 };
 
 export const updateDriver = async (req, res) => {
-  const result = await driversService.updateDriver(req.params.id, req.body);
+  const result = await driversService.updateDriver(req.params.id, req.body, req.user);
 
   return sendSuccess(res, {
-    message: 'Driver scaffold record updated successfully.',
+    message: 'Driver updated successfully.',
     data: result,
   });
 };
-

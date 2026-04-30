@@ -8,6 +8,7 @@ import { authorizeRoles } from '../../middlewares/authorize.js';
 import { validateRequest } from '../../middlewares/validateRequest.js';
 import { HUMAN_USER_ROLES } from '../../utils/constants.js';
 import {
+  liveLocationQuerySchema,
   locationHistoryQuerySchema,
   locationPingSchema,
   liveLocationParamSchema,
@@ -26,6 +27,13 @@ router.post(
   validateRequest({ body: locationPingSchema }),
   asyncHandler(authenticateDevice),
   asyncHandler(locationsController.createLocationPing),
+);
+router.get(
+  '/live',
+  asyncHandler(authenticateUser),
+  authorizeRoles(...HUMAN_USER_ROLES),
+  validateRequest({ query: liveLocationQuerySchema }),
+  asyncHandler(locationsController.listLiveLocations),
 );
 router.get(
   '/live/:tukTukId',

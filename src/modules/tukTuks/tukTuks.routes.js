@@ -9,6 +9,7 @@ import { HUMAN_USER_ROLES, WRITE_ACCESS_ROLES } from '../../utils/constants.js';
 import {
   createTukTukSchema,
   tukTukIdSchema,
+  tukTukLocationHistoryQuerySchema,
   tukTukListQuerySchema,
   updateTukTukSchema,
 } from './tukTuks.validation.js';
@@ -22,6 +23,12 @@ router.get(
   authorizeRoles(...HUMAN_USER_ROLES),
   validateRequest({ query: tukTukListQuerySchema }),
   asyncHandler(tukTuksController.listTukTuks),
+);
+router.get(
+  '/:id/location-history',
+  authorizeRoles(...HUMAN_USER_ROLES),
+  validateRequest({ params: tukTukIdSchema, query: tukTukLocationHistoryQuerySchema }),
+  asyncHandler(tukTuksController.getTukTukLocationHistory),
 );
 router.get(
   '/:id',
