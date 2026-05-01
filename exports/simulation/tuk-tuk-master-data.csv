@@ -1,0 +1,201 @@
+registrationNumber,plateNumber,model,color,status,provinceCode,provinceName,districtCode,districtName,stationCode,stationName,driverName,driverLicenseNumber,deviceSerialNumber,deviceStatus
+REG-2026-000001,WP-CAB-5001,Bajaj RE,Red,ACTIVE,WP,Western Province,COL,Colombo,FORT,Fort Police Station,Kasun Perera,B7000000,SIM-TD-001,ACTIVE
+REG-2026-000002,WP-CAB-5002,Piaggio Ape,Black,ACTIVE,WP,Western Province,COL,Colombo,PET,Pettah Police Station,Nimal Perera,B7000001,SIM-TD-002,ACTIVE
+REG-2026-000003,WP-CAB-5003,TVS King,Black,ACTIVE,WP,Western Province,COL,Colombo,MNTL,Mount Lavinia Police Station,Amila Perera,B7000002,SIM-TD-003,ACTIVE
+REG-2026-000004,WP-CAB-5004,Bajaj RE,Red,ACTIVE,WP,Western Province,GAM,Gampaha,NEG,Negombo Police Station,Sajith Perera,B7000003,SIM-TD-004,ACTIVE
+REG-2026-000005,WP-CAB-5005,Piaggio Ape,Silver,ACTIVE,WP,Western Province,GAM,Gampaha,KEL,Kelaniya Police Station,Pradeep Perera,B7000004,SIM-TD-005,ACTIVE
+REG-2026-000006,WP-CAB-5006,TVS King,Red,ACTIVE,WP,Western Province,KAL,Kalutara,PAN,Panadura Police Station,Hirusha Perera,B7000005,SIM-TD-006,ACTIVE
+REG-2026-000007,CP-CAB-5007,Bajaj RE,Silver,ACTIVE,CP,Central Province,KAN,Kandy,KDY,Kandy HQ Police Station,Janaka Perera,B7000006,SIM-TD-007,ACTIVE
+REG-2026-000008,CP-CAB-5008,Piaggio Ape,Silver,ACTIVE,CP,Central Province,KAN,Kandy,PER,Peradeniya Police Station,Rashan Perera,B7000007,SIM-TD-008,ACTIVE
+REG-2026-000009,CP-CAB-5009,TVS King,Silver,ACTIVE,CP,Central Province,NUW,Nuwara Eliya,NUWPS,Nuwara Eliya Police Station,Dilan Perera,B7000008,SIM-TD-009,ACTIVE
+REG-2026-000010,SP-CAB-5010,Bajaj RE,Green,ACTIVE,SP,Southern Province,GAL,Galle,GALP,Galle Police Station,Mahesh Perera,B7000009,SIM-TD-010,ACTIVE
+REG-2026-000011,SP-CAB-5011,Piaggio Ape,White,ACTIVE,SP,Southern Province,MATR,Matara,MATP,Matara Police Station,Ravindu Perera,B7000010,SIM-TD-011,ACTIVE
+REG-2026-000012,SP-CAB-5012,TVS King,Red,ACTIVE,SP,Southern Province,HAM,Hambantota,HAMB,Hambantota Police Station,Tharindu Perera,B7000011,SIM-TD-012,ACTIVE
+REG-2026-000013,NP-CAB-5013,Bajaj RE,Silver,ACTIVE,NP,Northern Province,JAF,Jaffna,JAFP,Jaffna Police Station,Niroshan Perera,B7000012,SIM-TD-013,ACTIVE
+REG-2026-000014,EP-CAB-5014,Piaggio Ape,Black,ACTIVE,EP,Eastern Province,TRI,Trincomalee,TRIP,Trincomalee Police Station,Ashan Perera,B7000013,SIM-TD-014,ACTIVE
+REG-2026-000015,EP-CAB-5015,TVS King,Red,ACTIVE,EP,Eastern Province,BAT,Batticaloa,BATP,Batticaloa Police Station,Chamath Perera,B7000014,SIM-TD-015,ACTIVE
+REG-2026-000016,EP-CAB-5016,Bajaj RE,White,ACTIVE,EP,Eastern Province,AMP,Ampara,AMPP,Ampara Police Station,Lahiru Perera,B7000015,SIM-TD-016,ACTIVE
+REG-2026-000017,NWP-CAB-5017,Piaggio Ape,Silver,ACTIVE,NWP,North Western Province,KUR,Kurunegala,KURP,Kurunegala Police Station,Udesh Perera,B7000016,SIM-TD-017,ACTIVE
+REG-2026-000018,NWP-CAB-5018,TVS King,Yellow,ACTIVE,NWP,North Western Province,PUT,Puttalam,PUTP,Puttalam Police Station,Roshan Perera,B7000017,SIM-TD-018,ACTIVE
+REG-2026-000019,NCP-CAB-5019,Bajaj RE,Black,ACTIVE,NCP,North Central Province,ANU,Anuradhapura,ANUP,Anuradhapura Police Station,Sampath Perera,B7000018,SIM-TD-019,ACTIVE
+REG-2026-000020,NCP-CAB-5020,Piaggio Ape,Blue,ACTIVE,NCP,North Central Province,POL,Polonnaruwa,POLP,Polonnaruwa Police Station,Yomal Perera,B7000019,SIM-TD-020,ACTIVE
+REG-2026-000021,UVA-CAB-5021,TVS King,Red,ACTIVE,UVA,Uva Province,BAD,Badulla,BADP,Badulla Police Station,Dilshan Perera,B7000020,SIM-TD-021,ACTIVE
+REG-2026-000022,UVA-CAB-5022,Bajaj RE,Yellow,ACTIVE,UVA,Uva Province,MON,Monaragala,MONP,Monaragala Police Station,Hasitha Perera,B7000021,SIM-TD-022,ACTIVE
+REG-2026-000023,SAB-CAB-5023,Piaggio Ape,Red,ACTIVE,SAB,Sabaragamuwa Province,RAT,Ratnapura,RATP,Ratnapura Police Station,Kushan Perera,B7000022,SIM-TD-023,ACTIVE
+REG-2026-000024,SAB-CAB-5024,TVS King,Black,ACTIVE,SAB,Sabaragamuwa Province,KEG,Kegalle,KEGP,Kegalle Police Station,Madushan Perera,B7000023,SIM-TD-024,ACTIVE
+REG-2026-000025,WP-CAB-5025,Bajaj RE,White,ACTIVE,WP,Western Province,COL,Colombo,FORT,Fort Police Station,Nadeera Perera,B7000024,SIM-TD-025,ACTIVE
+REG-2026-000026,WP-CAB-5026,Piaggio Ape,Silver,ACTIVE,WP,Western Province,COL,Colombo,PET,Pettah Police Station,Kasun Silva,B7000025,SIM-TD-026,ACTIVE
+REG-2026-000027,WP-CAB-5027,TVS King,Green,ACTIVE,WP,Western Province,COL,Colombo,MNTL,Mount Lavinia Police Station,Nimal Silva,B7000026,SIM-TD-027,ACTIVE
+REG-2026-000028,WP-CAB-5028,Bajaj RE,Silver,ACTIVE,WP,Western Province,GAM,Gampaha,NEG,Negombo Police Station,Amila Silva,B7000027,SIM-TD-028,ACTIVE
+REG-2026-000029,WP-CAB-5029,Piaggio Ape,Green,ACTIVE,WP,Western Province,GAM,Gampaha,KEL,Kelaniya Police Station,Sajith Silva,B7000028,SIM-TD-029,ACTIVE
+REG-2026-000030,WP-CAB-5030,TVS King,White,ACTIVE,WP,Western Province,KAL,Kalutara,PAN,Panadura Police Station,Pradeep Silva,B7000029,SIM-TD-030,ACTIVE
+REG-2026-000031,CP-CAB-5031,Bajaj RE,Blue,ACTIVE,CP,Central Province,KAN,Kandy,KDY,Kandy HQ Police Station,Hirusha Silva,B7000030,SIM-TD-031,ACTIVE
+REG-2026-000032,CP-CAB-5032,Piaggio Ape,White,ACTIVE,CP,Central Province,KAN,Kandy,PER,Peradeniya Police Station,Janaka Silva,B7000031,SIM-TD-032,ACTIVE
+REG-2026-000033,CP-CAB-5033,TVS King,Green,ACTIVE,CP,Central Province,NUW,Nuwara Eliya,NUWPS,Nuwara Eliya Police Station,Rashan Silva,B7000032,SIM-TD-033,ACTIVE
+REG-2026-000034,SP-CAB-5034,Bajaj RE,Yellow,ACTIVE,SP,Southern Province,GAL,Galle,GALP,Galle Police Station,Dilan Silva,B7000033,SIM-TD-034,ACTIVE
+REG-2026-000035,SP-CAB-5035,Piaggio Ape,Yellow,ACTIVE,SP,Southern Province,MATR,Matara,MATP,Matara Police Station,Mahesh Silva,B7000034,SIM-TD-035,ACTIVE
+REG-2026-000036,SP-CAB-5036,TVS King,Green,ACTIVE,SP,Southern Province,HAM,Hambantota,HAMB,Hambantota Police Station,Ravindu Silva,B7000035,SIM-TD-036,ACTIVE
+REG-2026-000037,NP-CAB-5037,Bajaj RE,Red,ACTIVE,NP,Northern Province,JAF,Jaffna,JAFP,Jaffna Police Station,Tharindu Silva,B7000036,SIM-TD-037,ACTIVE
+REG-2026-000038,EP-CAB-5038,Piaggio Ape,Silver,ACTIVE,EP,Eastern Province,TRI,Trincomalee,TRIP,Trincomalee Police Station,Niroshan Silva,B7000037,SIM-TD-038,ACTIVE
+REG-2026-000039,EP-CAB-5039,TVS King,Yellow,ACTIVE,EP,Eastern Province,BAT,Batticaloa,BATP,Batticaloa Police Station,Ashan Silva,B7000038,SIM-TD-039,ACTIVE
+REG-2026-000040,EP-CAB-5040,Bajaj RE,Yellow,ACTIVE,EP,Eastern Province,AMP,Ampara,AMPP,Ampara Police Station,Chamath Silva,B7000039,SIM-TD-040,ACTIVE
+REG-2026-000041,NWP-CAB-5041,Piaggio Ape,White,ACTIVE,NWP,North Western Province,KUR,Kurunegala,KURP,Kurunegala Police Station,Lahiru Silva,B7000040,SIM-TD-041,ACTIVE
+REG-2026-000042,NWP-CAB-5042,TVS King,Blue,ACTIVE,NWP,North Western Province,PUT,Puttalam,PUTP,Puttalam Police Station,Udesh Silva,B7000041,SIM-TD-042,ACTIVE
+REG-2026-000043,NCP-CAB-5043,Bajaj RE,Yellow,ACTIVE,NCP,North Central Province,ANU,Anuradhapura,ANUP,Anuradhapura Police Station,Roshan Silva,B7000042,SIM-TD-043,ACTIVE
+REG-2026-000044,NCP-CAB-5044,Piaggio Ape,Red,ACTIVE,NCP,North Central Province,POL,Polonnaruwa,POLP,Polonnaruwa Police Station,Sampath Silva,B7000043,SIM-TD-044,ACTIVE
+REG-2026-000045,UVA-CAB-5045,TVS King,White,ACTIVE,UVA,Uva Province,BAD,Badulla,BADP,Badulla Police Station,Yomal Silva,B7000044,SIM-TD-045,ACTIVE
+REG-2026-000046,UVA-CAB-5046,Bajaj RE,Green,ACTIVE,UVA,Uva Province,MON,Monaragala,MONP,Monaragala Police Station,Dilshan Silva,B7000045,SIM-TD-046,ACTIVE
+REG-2026-000047,SAB-CAB-5047,Piaggio Ape,Red,ACTIVE,SAB,Sabaragamuwa Province,RAT,Ratnapura,RATP,Ratnapura Police Station,Hasitha Silva,B7000046,SIM-TD-047,ACTIVE
+REG-2026-000048,SAB-CAB-5048,TVS King,Silver,ACTIVE,SAB,Sabaragamuwa Province,KEG,Kegalle,KEGP,Kegalle Police Station,Kushan Silva,B7000047,SIM-TD-048,ACTIVE
+REG-2026-000049,WP-CAB-5049,Bajaj RE,Green,ACTIVE,WP,Western Province,COL,Colombo,FORT,Fort Police Station,Madushan Silva,B7000048,SIM-TD-049,ACTIVE
+REG-2026-000050,WP-CAB-5050,Piaggio Ape,Black,ACTIVE,WP,Western Province,COL,Colombo,PET,Pettah Police Station,Nadeera Silva,B7000049,SIM-TD-050,ACTIVE
+REG-2026-000051,WP-CAB-5051,TVS King,Black,ACTIVE,WP,Western Province,COL,Colombo,MNTL,Mount Lavinia Police Station,Kasun Fernando,B7000050,SIM-TD-051,ACTIVE
+REG-2026-000052,WP-CAB-5052,Bajaj RE,Green,ACTIVE,WP,Western Province,GAM,Gampaha,NEG,Negombo Police Station,Nimal Fernando,B7000051,SIM-TD-052,ACTIVE
+REG-2026-000053,WP-CAB-5053,Piaggio Ape,Green,ACTIVE,WP,Western Province,GAM,Gampaha,KEL,Kelaniya Police Station,Amila Fernando,B7000052,SIM-TD-053,ACTIVE
+REG-2026-000054,WP-CAB-5054,TVS King,Yellow,ACTIVE,WP,Western Province,KAL,Kalutara,PAN,Panadura Police Station,Sajith Fernando,B7000053,SIM-TD-054,ACTIVE
+REG-2026-000055,CP-CAB-5055,Bajaj RE,Red,ACTIVE,CP,Central Province,KAN,Kandy,KDY,Kandy HQ Police Station,Pradeep Fernando,B7000054,SIM-TD-055,ACTIVE
+REG-2026-000056,CP-CAB-5056,Piaggio Ape,Blue,ACTIVE,CP,Central Province,KAN,Kandy,PER,Peradeniya Police Station,Hirusha Fernando,B7000055,SIM-TD-056,ACTIVE
+REG-2026-000057,CP-CAB-5057,TVS King,Blue,ACTIVE,CP,Central Province,NUW,Nuwara Eliya,NUWPS,Nuwara Eliya Police Station,Janaka Fernando,B7000056,SIM-TD-057,ACTIVE
+REG-2026-000058,SP-CAB-5058,Bajaj RE,White,ACTIVE,SP,Southern Province,GAL,Galle,GALP,Galle Police Station,Rashan Fernando,B7000057,SIM-TD-058,ACTIVE
+REG-2026-000059,SP-CAB-5059,Piaggio Ape,Green,ACTIVE,SP,Southern Province,MATR,Matara,MATP,Matara Police Station,Dilan Fernando,B7000058,SIM-TD-059,ACTIVE
+REG-2026-000060,SP-CAB-5060,TVS King,White,ACTIVE,SP,Southern Province,HAM,Hambantota,HAMB,Hambantota Police Station,Mahesh Fernando,B7000059,SIM-TD-060,ACTIVE
+REG-2026-000061,NP-CAB-5061,Bajaj RE,Blue,ACTIVE,NP,Northern Province,JAF,Jaffna,JAFP,Jaffna Police Station,Ravindu Fernando,B7000060,SIM-TD-061,ACTIVE
+REG-2026-000062,EP-CAB-5062,Piaggio Ape,Green,ACTIVE,EP,Eastern Province,TRI,Trincomalee,TRIP,Trincomalee Police Station,Tharindu Fernando,B7000061,SIM-TD-062,ACTIVE
+REG-2026-000063,EP-CAB-5063,TVS King,Yellow,ACTIVE,EP,Eastern Province,BAT,Batticaloa,BATP,Batticaloa Police Station,Niroshan Fernando,B7000062,SIM-TD-063,ACTIVE
+REG-2026-000064,EP-CAB-5064,Bajaj RE,Silver,ACTIVE,EP,Eastern Province,AMP,Ampara,AMPP,Ampara Police Station,Ashan Fernando,B7000063,SIM-TD-064,ACTIVE
+REG-2026-000065,NWP-CAB-5065,Piaggio Ape,Blue,ACTIVE,NWP,North Western Province,KUR,Kurunegala,KURP,Kurunegala Police Station,Chamath Fernando,B7000064,SIM-TD-065,ACTIVE
+REG-2026-000066,NWP-CAB-5066,TVS King,Green,ACTIVE,NWP,North Western Province,PUT,Puttalam,PUTP,Puttalam Police Station,Lahiru Fernando,B7000065,SIM-TD-066,ACTIVE
+REG-2026-000067,NCP-CAB-5067,Bajaj RE,Green,ACTIVE,NCP,North Central Province,ANU,Anuradhapura,ANUP,Anuradhapura Police Station,Udesh Fernando,B7000066,SIM-TD-067,ACTIVE
+REG-2026-000068,NCP-CAB-5068,Piaggio Ape,Black,ACTIVE,NCP,North Central Province,POL,Polonnaruwa,POLP,Polonnaruwa Police Station,Roshan Fernando,B7000067,SIM-TD-068,ACTIVE
+REG-2026-000069,UVA-CAB-5069,TVS King,Red,ACTIVE,UVA,Uva Province,BAD,Badulla,BADP,Badulla Police Station,Sampath Fernando,B7000068,SIM-TD-069,ACTIVE
+REG-2026-000070,UVA-CAB-5070,Bajaj RE,Blue,ACTIVE,UVA,Uva Province,MON,Monaragala,MONP,Monaragala Police Station,Yomal Fernando,B7000069,SIM-TD-070,ACTIVE
+REG-2026-000071,SAB-CAB-5071,Piaggio Ape,Blue,ACTIVE,SAB,Sabaragamuwa Province,RAT,Ratnapura,RATP,Ratnapura Police Station,Dilshan Fernando,B7000070,SIM-TD-071,ACTIVE
+REG-2026-000072,SAB-CAB-5072,TVS King,Yellow,ACTIVE,SAB,Sabaragamuwa Province,KEG,Kegalle,KEGP,Kegalle Police Station,Hasitha Fernando,B7000071,SIM-TD-072,ACTIVE
+REG-2026-000073,WP-CAB-5073,Bajaj RE,Green,ACTIVE,WP,Western Province,COL,Colombo,FORT,Fort Police Station,Kushan Fernando,B7000072,SIM-TD-073,ACTIVE
+REG-2026-000074,WP-CAB-5074,Piaggio Ape,White,ACTIVE,WP,Western Province,COL,Colombo,PET,Pettah Police Station,Madushan Fernando,B7000073,SIM-TD-074,ACTIVE
+REG-2026-000075,WP-CAB-5075,TVS King,Green,ACTIVE,WP,Western Province,COL,Colombo,MNTL,Mount Lavinia Police Station,Nadeera Fernando,B7000074,SIM-TD-075,ACTIVE
+REG-2026-000076,WP-CAB-5076,Bajaj RE,Black,ACTIVE,WP,Western Province,GAM,Gampaha,NEG,Negombo Police Station,Kasun Jayasekara,B7000075,SIM-TD-076,ACTIVE
+REG-2026-000077,WP-CAB-5077,Piaggio Ape,Blue,ACTIVE,WP,Western Province,GAM,Gampaha,KEL,Kelaniya Police Station,Nimal Jayasekara,B7000076,SIM-TD-077,ACTIVE
+REG-2026-000078,WP-CAB-5078,TVS King,Blue,ACTIVE,WP,Western Province,KAL,Kalutara,PAN,Panadura Police Station,Amila Jayasekara,B7000077,SIM-TD-078,ACTIVE
+REG-2026-000079,CP-CAB-5079,Bajaj RE,White,ACTIVE,CP,Central Province,KAN,Kandy,KDY,Kandy HQ Police Station,Sajith Jayasekara,B7000078,SIM-TD-079,ACTIVE
+REG-2026-000080,CP-CAB-5080,Piaggio Ape,Blue,ACTIVE,CP,Central Province,KAN,Kandy,PER,Peradeniya Police Station,Pradeep Jayasekara,B7000079,SIM-TD-080,ACTIVE
+REG-2026-000081,CP-CAB-5081,TVS King,Silver,ACTIVE,CP,Central Province,NUW,Nuwara Eliya,NUWPS,Nuwara Eliya Police Station,Hirusha Jayasekara,B7000080,SIM-TD-081,ACTIVE
+REG-2026-000082,SP-CAB-5082,Bajaj RE,Silver,ACTIVE,SP,Southern Province,GAL,Galle,GALP,Galle Police Station,Janaka Jayasekara,B7000081,SIM-TD-082,ACTIVE
+REG-2026-000083,SP-CAB-5083,Piaggio Ape,Yellow,ACTIVE,SP,Southern Province,MATR,Matara,MATP,Matara Police Station,Rashan Jayasekara,B7000082,SIM-TD-083,ACTIVE
+REG-2026-000084,SP-CAB-5084,TVS King,Blue,ACTIVE,SP,Southern Province,HAM,Hambantota,HAMB,Hambantota Police Station,Dilan Jayasekara,B7000083,SIM-TD-084,ACTIVE
+REG-2026-000085,NP-CAB-5085,Bajaj RE,Silver,ACTIVE,NP,Northern Province,JAF,Jaffna,JAFP,Jaffna Police Station,Mahesh Jayasekara,B7000084,SIM-TD-085,ACTIVE
+REG-2026-000086,EP-CAB-5086,Piaggio Ape,Blue,ACTIVE,EP,Eastern Province,TRI,Trincomalee,TRIP,Trincomalee Police Station,Ravindu Jayasekara,B7000085,SIM-TD-086,ACTIVE
+REG-2026-000087,EP-CAB-5087,TVS King,Yellow,ACTIVE,EP,Eastern Province,BAT,Batticaloa,BATP,Batticaloa Police Station,Tharindu Jayasekara,B7000086,SIM-TD-087,ACTIVE
+REG-2026-000088,EP-CAB-5088,Bajaj RE,Yellow,ACTIVE,EP,Eastern Province,AMP,Ampara,AMPP,Ampara Police Station,Niroshan Jayasekara,B7000087,SIM-TD-088,ACTIVE
+REG-2026-000089,NWP-CAB-5089,Piaggio Ape,Black,ACTIVE,NWP,North Western Province,KUR,Kurunegala,KURP,Kurunegala Police Station,Ashan Jayasekara,B7000088,SIM-TD-089,ACTIVE
+REG-2026-000090,NWP-CAB-5090,TVS King,Green,ACTIVE,NWP,North Western Province,PUT,Puttalam,PUTP,Puttalam Police Station,Chamath Jayasekara,B7000089,SIM-TD-090,ACTIVE
+REG-2026-000091,NCP-CAB-5091,Bajaj RE,White,ACTIVE,NCP,North Central Province,ANU,Anuradhapura,ANUP,Anuradhapura Police Station,Lahiru Jayasekara,B7000090,SIM-TD-091,ACTIVE
+REG-2026-000092,NCP-CAB-5092,Piaggio Ape,White,ACTIVE,NCP,North Central Province,POL,Polonnaruwa,POLP,Polonnaruwa Police Station,Udesh Jayasekara,B7000091,SIM-TD-092,ACTIVE
+REG-2026-000093,UVA-CAB-5093,TVS King,Silver,ACTIVE,UVA,Uva Province,BAD,Badulla,BADP,Badulla Police Station,Roshan Jayasekara,B7000092,SIM-TD-093,ACTIVE
+REG-2026-000094,UVA-CAB-5094,Bajaj RE,Blue,ACTIVE,UVA,Uva Province,MON,Monaragala,MONP,Monaragala Police Station,Sampath Jayasekara,B7000093,SIM-TD-094,ACTIVE
+REG-2026-000095,SAB-CAB-5095,Piaggio Ape,Yellow,ACTIVE,SAB,Sabaragamuwa Province,RAT,Ratnapura,RATP,Ratnapura Police Station,Yomal Jayasekara,B7000094,SIM-TD-095,ACTIVE
+REG-2026-000096,SAB-CAB-5096,TVS King,Blue,ACTIVE,SAB,Sabaragamuwa Province,KEG,Kegalle,KEGP,Kegalle Police Station,Dilshan Jayasekara,B7000095,SIM-TD-096,ACTIVE
+REG-2026-000097,WP-CAB-5097,Bajaj RE,Red,ACTIVE,WP,Western Province,COL,Colombo,FORT,Fort Police Station,Hasitha Jayasekara,B7000096,SIM-TD-097,ACTIVE
+REG-2026-000098,WP-CAB-5098,Piaggio Ape,Silver,ACTIVE,WP,Western Province,COL,Colombo,PET,Pettah Police Station,Kushan Jayasekara,B7000097,SIM-TD-098,ACTIVE
+REG-2026-000099,WP-CAB-5099,TVS King,Black,ACTIVE,WP,Western Province,COL,Colombo,MNTL,Mount Lavinia Police Station,Madushan Jayasekara,B7000098,SIM-TD-099,ACTIVE
+REG-2026-000100,WP-CAB-5100,Bajaj RE,Red,ACTIVE,WP,Western Province,GAM,Gampaha,NEG,Negombo Police Station,Nadeera Jayasekara,B7000099,SIM-TD-100,ACTIVE
+REG-2026-000101,WP-CAB-5101,Piaggio Ape,Black,ACTIVE,WP,Western Province,GAM,Gampaha,KEL,Kelaniya Police Station,Kasun Kumar,B7000100,SIM-TD-101,ACTIVE
+REG-2026-000102,WP-CAB-5102,TVS King,Blue,ACTIVE,WP,Western Province,KAL,Kalutara,PAN,Panadura Police Station,Nimal Kumar,B7000101,SIM-TD-102,ACTIVE
+REG-2026-000103,CP-CAB-5103,Bajaj RE,White,ACTIVE,CP,Central Province,KAN,Kandy,KDY,Kandy HQ Police Station,Amila Kumar,B7000102,SIM-TD-103,ACTIVE
+REG-2026-000104,CP-CAB-5104,Piaggio Ape,Blue,ACTIVE,CP,Central Province,KAN,Kandy,PER,Peradeniya Police Station,Sajith Kumar,B7000103,SIM-TD-104,ACTIVE
+REG-2026-000105,CP-CAB-5105,TVS King,Yellow,ACTIVE,CP,Central Province,NUW,Nuwara Eliya,NUWPS,Nuwara Eliya Police Station,Pradeep Kumar,B7000104,SIM-TD-105,ACTIVE
+REG-2026-000106,SP-CAB-5106,Bajaj RE,Green,ACTIVE,SP,Southern Province,GAL,Galle,GALP,Galle Police Station,Hirusha Kumar,B7000105,SIM-TD-106,ACTIVE
+REG-2026-000107,SP-CAB-5107,Piaggio Ape,Yellow,ACTIVE,SP,Southern Province,MATR,Matara,MATP,Matara Police Station,Janaka Kumar,B7000106,SIM-TD-107,ACTIVE
+REG-2026-000108,SP-CAB-5108,TVS King,Yellow,ACTIVE,SP,Southern Province,HAM,Hambantota,HAMB,Hambantota Police Station,Rashan Kumar,B7000107,SIM-TD-108,ACTIVE
+REG-2026-000109,NP-CAB-5109,Bajaj RE,Black,ACTIVE,NP,Northern Province,JAF,Jaffna,JAFP,Jaffna Police Station,Dilan Kumar,B7000108,SIM-TD-109,ACTIVE
+REG-2026-000110,EP-CAB-5110,Piaggio Ape,White,ACTIVE,EP,Eastern Province,TRI,Trincomalee,TRIP,Trincomalee Police Station,Mahesh Kumar,B7000109,SIM-TD-110,ACTIVE
+REG-2026-000111,EP-CAB-5111,TVS King,Black,ACTIVE,EP,Eastern Province,BAT,Batticaloa,BATP,Batticaloa Police Station,Ravindu Kumar,B7000110,SIM-TD-111,ACTIVE
+REG-2026-000112,EP-CAB-5112,Bajaj RE,Silver,ACTIVE,EP,Eastern Province,AMP,Ampara,AMPP,Ampara Police Station,Tharindu Kumar,B7000111,SIM-TD-112,ACTIVE
+REG-2026-000113,NWP-CAB-5113,Piaggio Ape,Blue,ACTIVE,NWP,North Western Province,KUR,Kurunegala,KURP,Kurunegala Police Station,Niroshan Kumar,B7000112,SIM-TD-113,ACTIVE
+REG-2026-000114,NWP-CAB-5114,TVS King,Blue,ACTIVE,NWP,North Western Province,PUT,Puttalam,PUTP,Puttalam Police Station,Ashan Kumar,B7000113,SIM-TD-114,ACTIVE
+REG-2026-000115,NCP-CAB-5115,Bajaj RE,Black,ACTIVE,NCP,North Central Province,ANU,Anuradhapura,ANUP,Anuradhapura Police Station,Chamath Kumar,B7000114,SIM-TD-115,ACTIVE
+REG-2026-000116,NCP-CAB-5116,Piaggio Ape,Blue,ACTIVE,NCP,North Central Province,POL,Polonnaruwa,POLP,Polonnaruwa Police Station,Lahiru Kumar,B7000115,SIM-TD-116,ACTIVE
+REG-2026-000117,UVA-CAB-5117,TVS King,Silver,ACTIVE,UVA,Uva Province,BAD,Badulla,BADP,Badulla Police Station,Udesh Kumar,B7000116,SIM-TD-117,ACTIVE
+REG-2026-000118,UVA-CAB-5118,Bajaj RE,Yellow,ACTIVE,UVA,Uva Province,MON,Monaragala,MONP,Monaragala Police Station,Roshan Kumar,B7000117,SIM-TD-118,ACTIVE
+REG-2026-000119,SAB-CAB-5119,Piaggio Ape,Blue,ACTIVE,SAB,Sabaragamuwa Province,RAT,Ratnapura,RATP,Ratnapura Police Station,Sampath Kumar,B7000118,SIM-TD-119,ACTIVE
+REG-2026-000120,SAB-CAB-5120,TVS King,Green,ACTIVE,SAB,Sabaragamuwa Province,KEG,Kegalle,KEGP,Kegalle Police Station,Yomal Kumar,B7000119,SIM-TD-120,ACTIVE
+REG-2026-000121,WP-CAB-5121,Bajaj RE,Red,ACTIVE,WP,Western Province,COL,Colombo,FORT,Fort Police Station,Dilshan Kumar,B7000120,SIM-TD-121,ACTIVE
+REG-2026-000122,WP-CAB-5122,Piaggio Ape,Black,ACTIVE,WP,Western Province,COL,Colombo,PET,Pettah Police Station,Hasitha Kumar,B7000121,SIM-TD-122,ACTIVE
+REG-2026-000123,WP-CAB-5123,TVS King,Black,ACTIVE,WP,Western Province,COL,Colombo,MNTL,Mount Lavinia Police Station,Kushan Kumar,B7000122,SIM-TD-123,ACTIVE
+REG-2026-000124,WP-CAB-5124,Bajaj RE,Yellow,ACTIVE,WP,Western Province,GAM,Gampaha,NEG,Negombo Police Station,Madushan Kumar,B7000123,SIM-TD-124,ACTIVE
+REG-2026-000125,WP-CAB-5125,Piaggio Ape,Green,ACTIVE,WP,Western Province,GAM,Gampaha,KEL,Kelaniya Police Station,Nadeera Kumar,B7000124,SIM-TD-125,ACTIVE
+REG-2026-000126,WP-CAB-5126,TVS King,Yellow,ACTIVE,WP,Western Province,KAL,Kalutara,PAN,Panadura Police Station,Kasun Mendis,B7000125,SIM-TD-126,ACTIVE
+REG-2026-000127,CP-CAB-5127,Bajaj RE,Silver,ACTIVE,CP,Central Province,KAN,Kandy,KDY,Kandy HQ Police Station,Nimal Mendis,B7000126,SIM-TD-127,ACTIVE
+REG-2026-000128,CP-CAB-5128,Piaggio Ape,White,ACTIVE,CP,Central Province,KAN,Kandy,PER,Peradeniya Police Station,Amila Mendis,B7000127,SIM-TD-128,ACTIVE
+REG-2026-000129,CP-CAB-5129,TVS King,Black,ACTIVE,CP,Central Province,NUW,Nuwara Eliya,NUWPS,Nuwara Eliya Police Station,Sajith Mendis,B7000128,SIM-TD-129,ACTIVE
+REG-2026-000130,SP-CAB-5130,Bajaj RE,Black,ACTIVE,SP,Southern Province,GAL,Galle,GALP,Galle Police Station,Pradeep Mendis,B7000129,SIM-TD-130,ACTIVE
+REG-2026-000131,SP-CAB-5131,Piaggio Ape,White,ACTIVE,SP,Southern Province,MATR,Matara,MATP,Matara Police Station,Hirusha Mendis,B7000130,SIM-TD-131,ACTIVE
+REG-2026-000132,SP-CAB-5132,TVS King,Blue,ACTIVE,SP,Southern Province,HAM,Hambantota,HAMB,Hambantota Police Station,Janaka Mendis,B7000131,SIM-TD-132,ACTIVE
+REG-2026-000133,NP-CAB-5133,Bajaj RE,White,ACTIVE,NP,Northern Province,JAF,Jaffna,JAFP,Jaffna Police Station,Rashan Mendis,B7000132,SIM-TD-133,ACTIVE
+REG-2026-000134,EP-CAB-5134,Piaggio Ape,Black,ACTIVE,EP,Eastern Province,TRI,Trincomalee,TRIP,Trincomalee Police Station,Dilan Mendis,B7000133,SIM-TD-134,ACTIVE
+REG-2026-000135,EP-CAB-5135,TVS King,Black,ACTIVE,EP,Eastern Province,BAT,Batticaloa,BATP,Batticaloa Police Station,Mahesh Mendis,B7000134,SIM-TD-135,ACTIVE
+REG-2026-000136,EP-CAB-5136,Bajaj RE,Silver,ACTIVE,EP,Eastern Province,AMP,Ampara,AMPP,Ampara Police Station,Ravindu Mendis,B7000135,SIM-TD-136,ACTIVE
+REG-2026-000137,NWP-CAB-5137,Piaggio Ape,Black,ACTIVE,NWP,North Western Province,KUR,Kurunegala,KURP,Kurunegala Police Station,Tharindu Mendis,B7000136,SIM-TD-137,ACTIVE
+REG-2026-000138,NWP-CAB-5138,TVS King,Red,ACTIVE,NWP,North Western Province,PUT,Puttalam,PUTP,Puttalam Police Station,Niroshan Mendis,B7000137,SIM-TD-138,ACTIVE
+REG-2026-000139,NCP-CAB-5139,Bajaj RE,Yellow,ACTIVE,NCP,North Central Province,ANU,Anuradhapura,ANUP,Anuradhapura Police Station,Ashan Mendis,B7000138,SIM-TD-139,ACTIVE
+REG-2026-000140,NCP-CAB-5140,Piaggio Ape,Black,ACTIVE,NCP,North Central Province,POL,Polonnaruwa,POLP,Polonnaruwa Police Station,Chamath Mendis,B7000139,SIM-TD-140,ACTIVE
+REG-2026-000141,UVA-CAB-5141,TVS King,Red,ACTIVE,UVA,Uva Province,BAD,Badulla,BADP,Badulla Police Station,Lahiru Mendis,B7000140,SIM-TD-141,ACTIVE
+REG-2026-000142,UVA-CAB-5142,Bajaj RE,Yellow,ACTIVE,UVA,Uva Province,MON,Monaragala,MONP,Monaragala Police Station,Udesh Mendis,B7000141,SIM-TD-142,ACTIVE
+REG-2026-000143,SAB-CAB-5143,Piaggio Ape,White,ACTIVE,SAB,Sabaragamuwa Province,RAT,Ratnapura,RATP,Ratnapura Police Station,Roshan Mendis,B7000142,SIM-TD-143,ACTIVE
+REG-2026-000144,SAB-CAB-5144,TVS King,Silver,ACTIVE,SAB,Sabaragamuwa Province,KEG,Kegalle,KEGP,Kegalle Police Station,Sampath Mendis,B7000143,SIM-TD-144,ACTIVE
+REG-2026-000145,WP-CAB-5145,Bajaj RE,Red,ACTIVE,WP,Western Province,COL,Colombo,FORT,Fort Police Station,Yomal Mendis,B7000144,SIM-TD-145,ACTIVE
+REG-2026-000146,WP-CAB-5146,Piaggio Ape,Green,ACTIVE,WP,Western Province,COL,Colombo,PET,Pettah Police Station,Dilshan Mendis,B7000145,SIM-TD-146,ACTIVE
+REG-2026-000147,WP-CAB-5147,TVS King,Yellow,ACTIVE,WP,Western Province,COL,Colombo,MNTL,Mount Lavinia Police Station,Hasitha Mendis,B7000146,SIM-TD-147,ACTIVE
+REG-2026-000148,WP-CAB-5148,Bajaj RE,Black,ACTIVE,WP,Western Province,GAM,Gampaha,NEG,Negombo Police Station,Kushan Mendis,B7000147,SIM-TD-148,ACTIVE
+REG-2026-000149,WP-CAB-5149,Piaggio Ape,Green,ACTIVE,WP,Western Province,GAM,Gampaha,KEL,Kelaniya Police Station,Madushan Mendis,B7000148,SIM-TD-149,ACTIVE
+REG-2026-000150,WP-CAB-5150,TVS King,Yellow,ACTIVE,WP,Western Province,KAL,Kalutara,PAN,Panadura Police Station,Nadeera Mendis,B7000149,SIM-TD-150,ACTIVE
+REG-2026-000151,CP-CAB-5151,Bajaj RE,Green,ACTIVE,CP,Central Province,KAN,Kandy,KDY,Kandy HQ Police Station,Kasun Dissanayake,B7000150,SIM-TD-151,ACTIVE
+REG-2026-000152,CP-CAB-5152,Piaggio Ape,Red,ACTIVE,CP,Central Province,KAN,Kandy,PER,Peradeniya Police Station,Nimal Dissanayake,B7000151,SIM-TD-152,ACTIVE
+REG-2026-000153,CP-CAB-5153,TVS King,Black,ACTIVE,CP,Central Province,NUW,Nuwara Eliya,NUWPS,Nuwara Eliya Police Station,Amila Dissanayake,B7000152,SIM-TD-153,ACTIVE
+REG-2026-000154,SP-CAB-5154,Bajaj RE,White,ACTIVE,SP,Southern Province,GAL,Galle,GALP,Galle Police Station,Sajith Dissanayake,B7000153,SIM-TD-154,ACTIVE
+REG-2026-000155,SP-CAB-5155,Piaggio Ape,Yellow,ACTIVE,SP,Southern Province,MATR,Matara,MATP,Matara Police Station,Pradeep Dissanayake,B7000154,SIM-TD-155,ACTIVE
+REG-2026-000156,SP-CAB-5156,TVS King,Blue,ACTIVE,SP,Southern Province,HAM,Hambantota,HAMB,Hambantota Police Station,Hirusha Dissanayake,B7000155,SIM-TD-156,ACTIVE
+REG-2026-000157,NP-CAB-5157,Bajaj RE,Silver,ACTIVE,NP,Northern Province,JAF,Jaffna,JAFP,Jaffna Police Station,Janaka Dissanayake,B7000156,SIM-TD-157,ACTIVE
+REG-2026-000158,EP-CAB-5158,Piaggio Ape,Black,ACTIVE,EP,Eastern Province,TRI,Trincomalee,TRIP,Trincomalee Police Station,Rashan Dissanayake,B7000157,SIM-TD-158,ACTIVE
+REG-2026-000159,EP-CAB-5159,TVS King,Red,ACTIVE,EP,Eastern Province,BAT,Batticaloa,BATP,Batticaloa Police Station,Dilan Dissanayake,B7000158,SIM-TD-159,ACTIVE
+REG-2026-000160,EP-CAB-5160,Bajaj RE,Red,ACTIVE,EP,Eastern Province,AMP,Ampara,AMPP,Ampara Police Station,Mahesh Dissanayake,B7000159,SIM-TD-160,ACTIVE
+REG-2026-000161,NWP-CAB-5161,Piaggio Ape,Silver,ACTIVE,NWP,North Western Province,KUR,Kurunegala,KURP,Kurunegala Police Station,Ravindu Dissanayake,B7000160,SIM-TD-161,ACTIVE
+REG-2026-000162,NWP-CAB-5162,TVS King,Green,ACTIVE,NWP,North Western Province,PUT,Puttalam,PUTP,Puttalam Police Station,Tharindu Dissanayake,B7000161,SIM-TD-162,ACTIVE
+REG-2026-000163,NCP-CAB-5163,Bajaj RE,White,ACTIVE,NCP,North Central Province,ANU,Anuradhapura,ANUP,Anuradhapura Police Station,Niroshan Dissanayake,B7000162,SIM-TD-163,ACTIVE
+REG-2026-000164,NCP-CAB-5164,Piaggio Ape,Red,ACTIVE,NCP,North Central Province,POL,Polonnaruwa,POLP,Polonnaruwa Police Station,Ashan Dissanayake,B7000163,SIM-TD-164,ACTIVE
+REG-2026-000165,UVA-CAB-5165,TVS King,Red,ACTIVE,UVA,Uva Province,BAD,Badulla,BADP,Badulla Police Station,Chamath Dissanayake,B7000164,SIM-TD-165,ACTIVE
+REG-2026-000166,UVA-CAB-5166,Bajaj RE,Blue,ACTIVE,UVA,Uva Province,MON,Monaragala,MONP,Monaragala Police Station,Lahiru Dissanayake,B7000165,SIM-TD-166,ACTIVE
+REG-2026-000167,SAB-CAB-5167,Piaggio Ape,Yellow,ACTIVE,SAB,Sabaragamuwa Province,RAT,Ratnapura,RATP,Ratnapura Police Station,Udesh Dissanayake,B7000166,SIM-TD-167,ACTIVE
+REG-2026-000168,SAB-CAB-5168,TVS King,Red,ACTIVE,SAB,Sabaragamuwa Province,KEG,Kegalle,KEGP,Kegalle Police Station,Roshan Dissanayake,B7000167,SIM-TD-168,ACTIVE
+REG-2026-000169,WP-CAB-5169,Bajaj RE,Green,ACTIVE,WP,Western Province,COL,Colombo,FORT,Fort Police Station,Sampath Dissanayake,B7000168,SIM-TD-169,ACTIVE
+REG-2026-000170,WP-CAB-5170,Piaggio Ape,Yellow,ACTIVE,WP,Western Province,COL,Colombo,PET,Pettah Police Station,Yomal Dissanayake,B7000169,SIM-TD-170,ACTIVE
+REG-2026-000171,WP-CAB-5171,TVS King,Green,ACTIVE,WP,Western Province,COL,Colombo,MNTL,Mount Lavinia Police Station,Dilshan Dissanayake,B7000170,SIM-TD-171,ACTIVE
+REG-2026-000172,WP-CAB-5172,Bajaj RE,White,ACTIVE,WP,Western Province,GAM,Gampaha,NEG,Negombo Police Station,Hasitha Dissanayake,B7000171,SIM-TD-172,ACTIVE
+REG-2026-000173,WP-CAB-5173,Piaggio Ape,White,ACTIVE,WP,Western Province,GAM,Gampaha,KEL,Kelaniya Police Station,Kushan Dissanayake,B7000172,SIM-TD-173,ACTIVE
+REG-2026-000174,WP-CAB-5174,TVS King,White,ACTIVE,WP,Western Province,KAL,Kalutara,PAN,Panadura Police Station,Madushan Dissanayake,B7000173,SIM-TD-174,ACTIVE
+REG-2026-000175,CP-CAB-5175,Bajaj RE,Black,ACTIVE,CP,Central Province,KAN,Kandy,KDY,Kandy HQ Police Station,Nadeera Dissanayake,B7000174,SIM-TD-175,ACTIVE
+REG-2026-000176,CP-CAB-5176,Piaggio Ape,White,ACTIVE,CP,Central Province,KAN,Kandy,PER,Peradeniya Police Station,Kasun Gunasekara,B7000175,SIM-TD-176,ACTIVE
+REG-2026-000177,CP-CAB-5177,TVS King,Yellow,ACTIVE,CP,Central Province,NUW,Nuwara Eliya,NUWPS,Nuwara Eliya Police Station,Nimal Gunasekara,B7000176,SIM-TD-177,ACTIVE
+REG-2026-000178,SP-CAB-5178,Bajaj RE,Silver,ACTIVE,SP,Southern Province,GAL,Galle,GALP,Galle Police Station,Amila Gunasekara,B7000177,SIM-TD-178,ACTIVE
+REG-2026-000179,SP-CAB-5179,Piaggio Ape,Black,ACTIVE,SP,Southern Province,MATR,Matara,MATP,Matara Police Station,Sajith Gunasekara,B7000178,SIM-TD-179,ACTIVE
+REG-2026-000180,SP-CAB-5180,TVS King,Red,ACTIVE,SP,Southern Province,HAM,Hambantota,HAMB,Hambantota Police Station,Pradeep Gunasekara,B7000179,SIM-TD-180,ACTIVE
+REG-2026-000181,NP-CAB-5181,Bajaj RE,Green,ACTIVE,NP,Northern Province,JAF,Jaffna,JAFP,Jaffna Police Station,Hirusha Gunasekara,B7000180,SIM-TD-181,ACTIVE
+REG-2026-000182,EP-CAB-5182,Piaggio Ape,Yellow,ACTIVE,EP,Eastern Province,TRI,Trincomalee,TRIP,Trincomalee Police Station,Janaka Gunasekara,B7000181,SIM-TD-182,ACTIVE
+REG-2026-000183,EP-CAB-5183,TVS King,White,ACTIVE,EP,Eastern Province,BAT,Batticaloa,BATP,Batticaloa Police Station,Rashan Gunasekara,B7000182,SIM-TD-183,ACTIVE
+REG-2026-000184,EP-CAB-5184,Bajaj RE,Yellow,ACTIVE,EP,Eastern Province,AMP,Ampara,AMPP,Ampara Police Station,Dilan Gunasekara,B7000183,SIM-TD-184,ACTIVE
+REG-2026-000185,NWP-CAB-5185,Piaggio Ape,Blue,ACTIVE,NWP,North Western Province,KUR,Kurunegala,KURP,Kurunegala Police Station,Mahesh Gunasekara,B7000184,SIM-TD-185,ACTIVE
+REG-2026-000186,NWP-CAB-5186,TVS King,Black,ACTIVE,NWP,North Western Province,PUT,Puttalam,PUTP,Puttalam Police Station,Ravindu Gunasekara,B7000185,SIM-TD-186,ACTIVE
+REG-2026-000187,NCP-CAB-5187,Bajaj RE,Green,ACTIVE,NCP,North Central Province,ANU,Anuradhapura,ANUP,Anuradhapura Police Station,Tharindu Gunasekara,B7000186,SIM-TD-187,ACTIVE
+REG-2026-000188,NCP-CAB-5188,Piaggio Ape,Black,ACTIVE,NCP,North Central Province,POL,Polonnaruwa,POLP,Polonnaruwa Police Station,Niroshan Gunasekara,B7000187,SIM-TD-188,ACTIVE
+REG-2026-000189,UVA-CAB-5189,TVS King,Silver,ACTIVE,UVA,Uva Province,BAD,Badulla,BADP,Badulla Police Station,Ashan Gunasekara,B7000188,SIM-TD-189,ACTIVE
+REG-2026-000190,UVA-CAB-5190,Bajaj RE,Blue,ACTIVE,UVA,Uva Province,MON,Monaragala,MONP,Monaragala Police Station,Chamath Gunasekara,B7000189,SIM-TD-190,ACTIVE
+REG-2026-000191,SAB-CAB-5191,Piaggio Ape,Yellow,ACTIVE,SAB,Sabaragamuwa Province,RAT,Ratnapura,RATP,Ratnapura Police Station,Lahiru Gunasekara,B7000190,SIM-TD-191,ACTIVE
+REG-2026-000192,SAB-CAB-5192,TVS King,Silver,ACTIVE,SAB,Sabaragamuwa Province,KEG,Kegalle,KEGP,Kegalle Police Station,Udesh Gunasekara,B7000191,SIM-TD-192,ACTIVE
+REG-2026-000193,WP-CAB-5193,Bajaj RE,White,ACTIVE,WP,Western Province,COL,Colombo,FORT,Fort Police Station,Roshan Gunasekara,B7000192,SIM-TD-193,ACTIVE
+REG-2026-000194,WP-CAB-5194,Piaggio Ape,Silver,ACTIVE,WP,Western Province,COL,Colombo,PET,Pettah Police Station,Sampath Gunasekara,B7000193,SIM-TD-194,ACTIVE
+REG-2026-000195,WP-CAB-5195,TVS King,Black,ACTIVE,WP,Western Province,COL,Colombo,MNTL,Mount Lavinia Police Station,Yomal Gunasekara,B7000194,SIM-TD-195,ACTIVE
+REG-2026-000196,WP-CAB-5196,Bajaj RE,Red,ACTIVE,WP,Western Province,GAM,Gampaha,NEG,Negombo Police Station,Dilshan Gunasekara,B7000195,SIM-TD-196,ACTIVE
+REG-2026-000197,WP-CAB-5197,Piaggio Ape,Blue,ACTIVE,WP,Western Province,GAM,Gampaha,KEL,Kelaniya Police Station,Hasitha Gunasekara,B7000196,SIM-TD-197,ACTIVE
+REG-2026-000198,WP-CAB-5198,TVS King,Silver,ACTIVE,WP,Western Province,KAL,Kalutara,PAN,Panadura Police Station,Kushan Gunasekara,B7000197,SIM-TD-198,ACTIVE
+REG-2026-000199,CP-CAB-5199,Bajaj RE,Yellow,ACTIVE,CP,Central Province,KAN,Kandy,KDY,Kandy HQ Police Station,Madushan Gunasekara,B7000198,SIM-TD-199,ACTIVE
+REG-2026-000200,CP-CAB-5200,Piaggio Ape,Silver,ACTIVE,CP,Central Province,KAN,Kandy,PER,Peradeniya Police Station,Nadeera Gunasekara,B7000199,SIM-TD-200,ACTIVE

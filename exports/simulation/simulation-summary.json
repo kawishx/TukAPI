@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-04-30T05:13:29.472Z",
+  "exportDirectory": "/Users/kawishjayawardena/Desktop/Web API/TukAPI/exports/simulation",
+  "demoDate": "2026-04-30",
+  "seed": "stage7-demo",
+  "provinceCount": 9,
+  "districtCount": 25,
+  "stationCount": 24,
+  "tukTukCount": 200,
+  "locationPingCount": 71400,
+  "firstRecordedAt": "2026-04-23T00:30:00.000Z",
+  "lastRecordedAt": "2026-04-29T23:15:00.000Z"
+}

@@ -17,7 +17,10 @@ const sanitizeUser = (user) => {
     return null;
   }
 
-  const { passwordHash, refreshTokenHash, ...safeUser } = user;
+  const safeUser = { ...user };
+  delete safeUser.passwordHash;
+  delete safeUser.refreshTokenHash;
+
   return safeUser;
 };
 

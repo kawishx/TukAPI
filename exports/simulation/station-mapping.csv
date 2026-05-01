@@ -1,0 +1,25 @@
+provinceCode,provinceName,districtCode,districtName,stationCode,stationName,address,contactNumber,isActive,latitude,longitude
+EP,Eastern Province,AMP,Ampara,AMPP,Ampara Police Station,Ampara,+94632234501,true,7.2915,81.6724
+NCP,North Central Province,ANU,Anuradhapura,ANUP,Anuradhapura Police Station,Anuradhapura,+94252234501,true,8.3114,80.4037
+UVA,Uva Province,BAD,Badulla,BADP,Badulla Police Station,Badulla,+94552234501,true,6.9934,81.055
+EP,Eastern Province,BAT,Batticaloa,BATP,Batticaloa Police Station,Batticaloa,+94652234501,true,7.7102,81.6924
+WP,Western Province,COL,Colombo,FORT,Fort Police Station,Colombo 01,+94112345601,true,6.9344,79.8428
+SP,Southern Province,GAL,Galle,GALP,Galle Police Station,Galle Fort,+94912234501,true,6.0329,80.2168
+SP,Southern Province,HAM,Hambantota,HAMB,Hambantota Police Station,Hambantota,+94472234501,true,6.1241,81.1185
+NP,Northern Province,JAF,Jaffna,JAFP,Jaffna Police Station,Jaffna Town,+94212234501,true,9.6615,80.0255
+CP,Central Province,KAN,Kandy,KDY,Kandy HQ Police Station,Kandy,+94812234501,true,7.2906,80.6337
+SAB,Sabaragamuwa Province,KEG,Kegalle,KEGP,Kegalle Police Station,Kegalle,+94352234501,true,7.2511,80.3464
+WP,Western Province,GAM,Gampaha,KEL,Kelaniya Police Station,Kelaniya,+94112345604,true,6.9553,79.922
+NWP,North Western Province,KUR,Kurunegala,KURP,Kurunegala Police Station,Kurunegala,+94372234501,true,7.4863,80.3647
+SP,Southern Province,MATR,Matara,MATP,Matara Police Station,Matara,+94412234501,true,5.9549,80.555
+WP,Western Province,COL,Colombo,MNTL,Mount Lavinia Police Station,Mount Lavinia,+94112345603,true,6.8389,79.863
+UVA,Uva Province,MON,Monaragala,MONP,Monaragala Police Station,Monaragala,+94552234502,true,6.8728,81.3507
+WP,Western Province,GAM,Gampaha,NEG,Negombo Police Station,Negombo,+94312234501,true,7.2083,79.8358
+CP,Central Province,NUW,Nuwara Eliya,NUWPS,Nuwara Eliya Police Station,Nuwara Eliya,+94522234501,true,6.9497,80.7891
+WP,Western Province,KAL,Kalutara,PAN,Panadura Police Station,Panadura,+94382234501,true,6.7132,79.9066
+CP,Central Province,KAN,Kandy,PER,Peradeniya Police Station,Peradeniya,+94812234502,true,7.2664,80.594
+WP,Western Province,COL,Colombo,PET,Pettah Police Station,"Pettah, Colombo",+94112345602,true,6.9391,79.8506
+NCP,North Central Province,POL,Polonnaruwa,POLP,Polonnaruwa Police Station,Polonnaruwa,+94272234501,true,7.9403,81.0188
+NWP,North Western Province,PUT,Puttalam,PUTP,Puttalam Police Station,Puttalam,+94322234501,true,8.0362,79.8283
+SAB,Sabaragamuwa Province,RAT,Ratnapura,RATP,Ratnapura Police Station,Ratnapura,+94452234501,true,6.6828,80.3992
+EP,Eastern Province,TRI,Trincomalee,TRIP,Trincomalee Police Station,Trincomalee,+94262234501,true,8.5874,81.2152

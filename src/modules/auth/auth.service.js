@@ -120,7 +120,7 @@ export const refresh = async ({ refreshToken }, requestContext) => {
 
   try {
     payload = verifyRefreshToken(refreshToken);
-  } catch (_error) {
+  } catch {
     throw new ApiError(401, 'Invalid refresh token.');
   }
 
@@ -178,7 +178,7 @@ export const logout = async ({ refreshToken }, requestContext) => {
         userAgent: requestContext.userAgent,
       });
     }
-  } catch (_error) {
+  } catch {
     return {
       message: 'Logout successful.',
       data: null,

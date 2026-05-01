@@ -4,19 +4,34 @@ import { logger } from './config/logger.js';
 import { connectPrisma, disconnectPrisma } from './config/prisma.js';
 
 let server;
+let isShuttingDown = false;
+
+const closeHttpServer = () =>
+  new Promise((resolve, reject) => {
+    if (!server) {
+      resolve();
+      return;
+    }
+
+    server.close((error) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      resolve();
+    });
+  });
 
 const shutdown = async (signal) => {
-  logger.info({ signal }, 'Shutdown signal received');
-
-  if (server) {
-    server.close(async () => {
-      logger.info('HTTP server closed');
-      await disconnectPrisma();
-      process.exit(0);
-    });
+  if (isShuttingDown) {
     return;
   }
 
+  isShuttingDown = true;
+  logger.info({ signal }, 'Shutdown signal received');
+  await closeHttpServer();
+  logger.info('HTTP server closed');
   await disconnectPrisma();
   process.exit(0);
 };
@@ -25,7 +40,20 @@ const startServer = async () => {
   await connectPrisma();
 
   server = app.listen(env.PORT, () => {
-    logger.info(`TukAPI listening on port ${env.PORT}`);
+    logger.info(
+      {
+        port: env.PORT,
+        environment: env.NODE_ENV,
+        apiPrefix: env.API_PREFIX,
+        swaggerEnabled: env.SWAGGER_ENABLED,
+      },
+      'TukAPI started',
+    );
+  });
+
+  server.on('error', (error) => {
+    logger.fatal({ err: error }, 'HTTP server failed');
+    process.exit(1);
   });
 };
 

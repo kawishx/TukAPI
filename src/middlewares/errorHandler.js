@@ -4,7 +4,9 @@ import { ZodError } from 'zod';
 import { logger } from '../config/logger.js';
 import { ApiError } from '../utils/apiError.js';
 
-export const errorHandler = (error, _req, res, _next) => {
+export const errorHandler = (error, _req, res, next) => {
+  void next;
+
   if (error instanceof ZodError) {
     return res.status(400).json({
       success: false,

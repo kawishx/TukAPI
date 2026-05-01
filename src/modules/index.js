@@ -22,7 +22,7 @@ router.get(
   asyncHandler(async (_req, res) => {
     try {
       await checkDatabaseHealth();
-    } catch (_error) {
+    } catch {
       throw new ApiError(503, 'Database connectivity check failed.');
     }
 
@@ -42,7 +42,7 @@ router.get(
 router.get('/health/ready', asyncHandler(async (_req, res) => {
   try {
     await checkDatabaseHealth();
-  } catch (_error) {
+  } catch {
     throw new ApiError(503, 'Database connectivity check failed.');
   }
 

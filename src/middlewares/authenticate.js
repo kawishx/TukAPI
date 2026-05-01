@@ -38,7 +38,7 @@ export const authenticateUser = async (req, _res, next) => {
     };
 
     return next();
-  } catch (_error) {
+  } catch {
     return next(new ApiError(401, 'Invalid or expired authentication token.'));
   }
 };

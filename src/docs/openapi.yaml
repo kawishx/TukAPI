@@ -43,8 +43,8 @@ paths:
             schema:
               $ref: '#/components/schemas/LoginRequest'
             example:
-              email: hq.admin@police.gov.lk
-              password: DemoPassword123!
+              email: hq.admin@demo.local
+              password: DemoPass123!
       responses:
         '200':
           description: Login successful
@@ -118,6 +118,46 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Resolve the authenticated user profile
+      operationId: getCurrentAuthenticatedUser
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Authenticated user returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSingleResponse'
+              example:
+                success: true
+                message: Authenticated user resolved successfully.
+                data:
+                  id: cm9x7a1bc0019abc123456789
+                  fullName: HQ Administrator
+                  email: hq.admin@demo.local
+                  badgeNumber: HQ-001
+                  role: HQ_ADMIN
+                  provinceId: null
+                  districtId: null
+                  stationId: null
+                  phoneNumber: null
+                  isActive: true
+                  lastLoginAt: '2026-04-30T03:55:00.000Z'
+                  createdAt: '2026-04-20T09:00:00.000Z'
+                  updatedAt: '2026-04-30T03:55:00.000Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '429':
           $ref: '#/components/responses/TooManyRequests'
         '500':
