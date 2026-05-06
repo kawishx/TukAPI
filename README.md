@@ -22,12 +22,17 @@ Production-style Node.js ES Modules REST API scaffold for Sri Lanka Police tuk-t
 
 ```text
 .
+├── APPENDIX_LINKS_TEMPLATE.md
+├── DEMO_CHECKLIST.md
+├── LIVE_VERIFICATION.md
+├── POSTMAN_REQUESTS.md
 ├── .env.example
 ├── .gitignore
 ├── .prettierignore
 ├── .prettierrc.json
 ├── eslint.config.js
 ├── package.json
+├── render.yaml
 ├── prisma
 │   └── schema.prisma
 ├── scripts
@@ -68,7 +73,9 @@ Production-style Node.js ES Modules REST API scaffold for Sri Lanka Police tuk-t
 │   │   └── users
 │   ├── server.js
 │   ├── tests
-│   │   └── health.test.js
+│   │   ├── api.integration.test.js
+│   │   ├── health.test.js
+│   │   └── helpers
 │   └── utils
 │       ├── apiError.js
 │       ├── apiResponse.js
@@ -142,7 +149,7 @@ The scaffold includes:
 - pagination, sorting, and geographic filtering query scaffolding
 - ETag and `Last-Modified` based conditional GET support helpers
 - Swagger/OpenAPI documentation setup
-- sample health check test with Supertest
+- integration tests for auth, device pings, scoped access, history filtering, and conditional GET
 
 ## Setup
 
@@ -191,6 +198,133 @@ The scaffold includes:
    ```text
    http://localhost:3000/docs
    ```
+
+## Deployment
+
+This project is ready to deploy to Render using a Render web service and Render Postgres.
+
+### Production Safety Notes
+
+- `DATABASE_URL` and JWT secrets must be explicitly provided in production.
+- placeholder secrets such as `change-this-*` are rejected in production startup.
+- `CORS_ORIGIN=*` is allowed for development but rejected in production.
+- `TRUST_PROXY` is configurable and should be `1` on Render.
+- `GET /api/v1/health` performs a real database check and is suitable for Render health checks.
+
+### Render Postgres
+
+1. In the Render dashboard, create a new Postgres database.
+2. Choose a region close to your web service. `singapore` is a sensible default for Sri Lanka.
+3. Copy the internal connection string and use it as `DATABASE_URL`.
+
+### Render Web Service
+
+1. Push this repository to GitHub.
+2. In Render, create a new web service from that GitHub repository.
+3. Use these commands:
+
+```text
+Build Command: npm install && npm run build
+Start Command: npm start
+Health Check Path: /api/v1/health
+```
+
+4. Set the required environment variables:
+
+- `DATABASE_URL`
+- `JWT_SECRET`
+- `JWT_ACCESS_SECRET`
+- `JWT_REFRESH_SECRET`
+- `CORS_ORIGIN`
+
+Recommended environment variables:
+
+- `NODE_ENV=production`
+- `API_PREFIX=/api/v1`
+- `TRUST_PROXY=1`
+- `LOG_LEVEL=info`
+- `SWAGGER_ENABLED=true`
+- `RATE_LIMIT_WINDOW_MS=900000`
+- `RATE_LIMIT_MAX=100`
+- `AUTH_RATE_LIMIT_WINDOW_MS=900000`
+- `AUTH_RATE_LIMIT_MAX=10`
+
+### Prisma In Production
+
+Use Prisma deploy migrations in production only:
+
+```bash
+npm run prisma:migrate:deploy
+```
+
+Do not use `npm run prisma:migrate:dev` in production.
+
+The build script already runs Prisma client generation:
+
+```bash
+npm run build
+```
+
+### Optional Render Blueprint
+
+The repository includes [render.yaml](/Users/kawishjayawardena/Desktop/Web%20API/TukAPI/render.yaml) as a simple Render Blueprint for a Node web service plus Render Postgres. You can use it as a starting point and adjust the plan, region, and secret values in the Render dashboard.
+
+### Seeding And Demo Data After Deployment
+
+After the production database is migrated, you can seed demo data by opening a Render shell or one-off job and running:
+
+```bash
+npm run demo:seed
+npm run simulation:generate
+```
+
+If you also want export files:
+
+```bash
+npm run simulation:export
+```
+
+Note: Render web-service filesystems are ephemeral, so exported files in `exports/` are best treated as temporary evidence. For stable appendix artifacts, run exports locally against the same database or download them immediately after generation.
+
+### Live Verification
+
+After deployment:
+
+1. Open `/api/v1/health`
+2. Open `/docs`
+3. Test `POST /api/v1/auth/login`
+4. Test `GET /api/v1/locations/live`
+5. Test `GET /api/v1/locations/history`
+6. Test a repeated `GET /api/v1/locations/live/{tukTukId}` with `If-None-Match`
+
+Use [LIVE_VERIFICATION.md](/Users/kawishjayawardena/Desktop/Web%20API/TukAPI/LIVE_VERIFICATION.md) during the final deployment check and [APPENDIX_LINKS_TEMPLATE.md](/Users/kawishjayawardena/Desktop/Web%20API/TukAPI/APPENDIX_LINKS_TEMPLATE.md) when preparing the report appendix.
+
+## Testing And Quality
+
+Run the automated checks before a demo or submission:
+
+```bash
+npm run lint
+npm test
+```
+
+Current automated coverage includes:
+
+- auth login success and failure
+- unauthorized protected-route access
+- valid and revoked device ping handling
+- out-of-order ping storage without replacing `CurrentLocation`
+- live-location pagination
+- history filtering by tuk-tuk and time window
+- district-scope access rejection
+- conditional GET with `ETag` returning `304 Not Modified`
+
+Supporting test helpers are under `src/tests/helpers/` and provide:
+
+- seeded bearer-token generation for demo users
+- seeded device-auth headers
+- repeatable in-memory Prisma test state reset helpers
+- reusable request decorators for user and device calls
 
 ## Simulation Workflow
 
@@ -283,6 +417,32 @@ You can also inspect the database directly with:
 
 ```bash
 npm run prisma:studio
+```
+
+## Demo Assets
+
+Stage 8 adds two presentation helpers at the project root:
+
+- `DEMO_CHECKLIST.md` for the step-by-step presentation flow
+- `POSTMAN_REQUESTS.md` for ready-to-use request examples
+
+Demo user accounts created by `npm run demo:seed` all use the same development-only password:
+
+```text
+DemoPass123!
+```
+
+Examples:
+
+- `hq.admin@demo.local`
+- `western.admin@demo.local`
+- `colombo.officer@demo.local`
+- `fort.officer@demo.local`
+
+Sample device token for demo telemetry:
+
+```text
+demo-device-token-0001
 ```
 
 ## Prisma Workflow
